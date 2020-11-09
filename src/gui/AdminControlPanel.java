@@ -1,4 +1,4 @@
-package driver;
+package gui;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
@@ -142,7 +142,8 @@ public class AdminControlPanel {
 					System.out.println(inputID);
 					
 					DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-					model.insertNodeInto(new DefaultMutableTreeNode(inputID), selectedNode, selectedNode.getChildCount());
+					DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+					model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
 					
 				}catch (Exception ex) {
 					ex.printStackTrace();
@@ -200,5 +201,8 @@ public class AdminControlPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_1.setBounds(168, 51, 47, 27);
 		mainAppWindow.getContentPane().add(lblNewLabel_1);
+		
+		//Initialize starting node
+		selectedNode = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	}
 }

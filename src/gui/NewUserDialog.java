@@ -1,4 +1,4 @@
-package driver;
+package gui;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
