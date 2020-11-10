@@ -16,6 +16,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import admin.AdminController;
 
@@ -34,8 +35,16 @@ public class AdminControlPanel {
 	private JTextField txtUserInput;
 	private JTextField txtGroupInput;
 	private JTree tree;
+	
+	private JButton btnAddUser;
+	private JButton btnAddGroup;
+	private JButton btnOpenUserView;
+	
 	private DefaultMutableTreeNode selectedNode;
-	private AdminController adminController;
+	private final DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("(empty)");
+	
+	private static AdminController adminController = AdminController.getInstance();
+	
 
 	/**
 	 * Launch the application.
@@ -78,25 +87,37 @@ public class AdminControlPanel {
 		tree = new JTree();
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
+				//Enable buttons when any element in the tree is chosen
+				btnAddUser.setEnabled(true);
+				btnAddGroup.setEnabled(true);
+				
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                         tree.getLastSelectedPathComponent();
 				selectedNode = node;
-				//If user
-				if(node.isLeaf()) {
-					DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-					String nodeParentName = (String)parent.getUserObject();
+				try {
 					String nodeName = (String)node.getUserObject();
-					txtUserInput.setText(nodeName);
-					txtGroupInput.setText(nodeParentName);
-				}else {
-					txtUserInput.setText(null);
-					String nodeName = (String)node.getUserObject();
-					txtGroupInput.setText(nodeName);
+					//If user
+					if(node.isLeaf()) {
+						btnOpenUserView.setEnabled(true);
+						
+						DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+						String nodeParentName = (String)parent.getUserObject();
+						txtUserInput.setText(nodeName);
+						txtGroupInput.setText(nodeParentName);
+					}else {
+						btnOpenUserView.setEnabled(false);
+						
+						txtUserInput.setText(null);
+						txtGroupInput.setText(nodeName);
+					}
+					
+				}catch(Exception ex) {
+					ex.printStackTrace();
 				}
-				
 				
 			}
 		});
+		tree.setExpandsSelectedPaths(true);
 		tree.setShowsRootHandles(true);
 		tree.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("Root") {
@@ -119,15 +140,19 @@ public class AdminControlPanel {
 				}
 			}
 		));
+		
+		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		scrollPane.setViewportView(tree);
 		
 		txtUserInput = new JTextField();
-		txtUserInput.setEditable(true);
+		txtUserInput.setEditable(false);
 		txtUserInput.setBounds(214, 11, 101, 29);
 		mainAppWindow.getContentPane().add(txtUserInput);
 		txtUserInput.setColumns(10);
 		
-		JButton btnAddUser = new JButton("Add User");
+		btnAddUser = new JButton("Add User");
+		//Initially set to disabled until a tree element is selected
+		btnAddUser.setEnabled(false);
 		btnAddUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -139,13 +164,12 @@ public class AdminControlPanel {
 					userDialog.setVisible(true);
 					
 					String inputID = userDialog.getID();
-					System.out.println(inputID);
 					
 					DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 					DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+					//Insert element
 					model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
-					
-				}catch (Exception ex) {
+				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -159,11 +183,45 @@ public class AdminControlPanel {
 		txtGroupInput.setBounds(214, 51, 101, 29);
 		mainAppWindow.getContentPane().add(txtGroupInput);
 		
-		JButton btnAddGroup = new JButton("Add Group");
+		btnAddGroup = new JButton("Add Group");
+		//Initially set to disabled until a tree element is selected
+		btnAddGroup.setEnabled(false);
+		btnAddGroup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					NewGroupDialog groupDialog = new NewGroupDialog();
+					groupDialog.setSelectedGroup(txtGroupInput.getText());
+					
+					groupDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+					groupDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					groupDialog.setVisible(true);
+					
+					String inputID = groupDialog.getID();
+					
+					//Get tree model
+					DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+					//Set target node to insert into
+					DefaultMutableTreeNode insertionNode = selectedNode;
+					//Insert Node
+					model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
+					
+					//Switch insertion node to the most recent node we just added
+					insertionNode = insertionNode.getLastLeaf();
+					//Insert empty node as a placeholder
+					model.insertNodeInto(emptyNode, insertionNode, insertionNode.getChildCount());
+					
+				}catch(Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		btnAddGroup.setBounds(325, 51, 99, 29);
 		mainAppWindow.getContentPane().add(btnAddGroup);
 		
-		JButton btnOpenUserView = new JButton("Open User View");
+		btnOpenUserView = new JButton("Open User View");
+		//Initially set to disabled
+		btnOpenUserView.setEnabled(false);
+		btnOpenUserView.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnOpenUserView.setBounds(176, 91, 248, 29);
 		mainAppWindow.getContentPane().add(btnOpenUserView);
 		

@@ -19,8 +19,12 @@ import java.awt.event.ActionEvent;
 public class NewUserDialog extends JDialog {
 	
 	private JTextField txtID;
-	private String selectedGroup;
 	private JTextField txtGroup;
+	
+	private JButton btnCancel;
+	private JButton btnOk;
+	
+	private String selectedGroup;
 
 	/**
 	 * Launch the application.
@@ -39,6 +43,7 @@ public class NewUserDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public NewUserDialog() {
+		
 		setResizable(false);
 		setType(Type.POPUP);
 		setTitle("New User Dialog");
@@ -66,7 +71,7 @@ public class NewUserDialog extends JDialog {
 			getContentPane().add(lblGroup);
 		}
 		
-		JButton btnCancel = new JButton("Cancel");
+		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtID = null;
@@ -77,7 +82,7 @@ public class NewUserDialog extends JDialog {
 		btnCancel.setBounds(150, 119, 81, 29);
 		getContentPane().add(btnCancel);
 		{
-			JButton btnOk = new JButton("Ok");
+			btnOk = new JButton("Ok");
 			btnOk.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(txtID.getText() == "") { txtID = null; }
@@ -96,6 +101,9 @@ public class NewUserDialog extends JDialog {
 			
 			getContentPane().add(txtGroup);
 		}
+		
+		//Set default button so enter key works
+		getRootPane().setDefaultButton(btnOk);
 		
 		JTextArea txtrtoChangeGroup = new JTextArea();
 		txtrtoChangeGroup.setBackground(UIManager.getColor("Button.background"));

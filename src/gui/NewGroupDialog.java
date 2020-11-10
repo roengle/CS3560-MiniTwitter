@@ -22,10 +22,17 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
 import java.awt.Window.Type;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class NewGroupDialog extends JDialog {
+	
 	private JTextField txtGroupIDInput;
 	private JTextField txtGroupInput;
+	private JButton btnOk;
+	private JButton btnCancel;
+	
+	private String selectedGroup;
 
 	/**
 	 * Launch the application.
@@ -87,12 +94,36 @@ public class NewGroupDialog extends JDialog {
 		txtrtoChangeGroup.setBounds(86, 73, 151, 49);
 		getContentPane().add(txtrtoChangeGroup);
 		
-		JButton btnOk = new JButton("Ok");
+		btnOk = new JButton("Ok");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(txtGroupIDInput.getText() == "") { txtGroupIDInput = null; }
+				dispose();
+			}
+		});
 		btnOk.setBounds(79, 123, 67, 29);
 		getContentPane().add(btnOk);
 		
-		JButton btnCancel = new JButton("Cancel");
+		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtGroupIDInput = null;
+				dispose();
+			}
+		});
 		btnCancel.setBounds(156, 123, 81, 29);
 		getContentPane().add(btnCancel);
+		
+		//Set default button so enter key submits
+		getRootPane().setDefaultButton(btnOk);
+	}
+	
+	public void setSelectedGroup(String group) {
+		this.selectedGroup = group;
+		txtGroupInput.setText(this.selectedGroup);
+	}
+	
+	public String getID() {
+		return this.txtGroupIDInput != null ? this.txtGroupIDInput.getText() : null;
 	}
 }

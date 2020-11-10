@@ -7,6 +7,8 @@ import user.UserGroup;
 public class AdminController implements AdminInterface {
 	//Static instance field for AdminController singleton
 	private static volatile AdminController instance = null;
+	
+	/* Instance fields */
 	private static UserGroup rootUserGroup;
 	private static TreeEntry selectedEntry;
 	
@@ -27,20 +29,33 @@ public class AdminController implements AdminInterface {
 		return instance == null ? new AdminController() : instance;
 	}
 	
+	/**
+	 * Sets the AdminController's root group
+	 * @param root the UserGroup object representing root
+	 */
 	public static void setRootGroup(UserGroup root) {
 		rootUserGroup = root;
 	}
 	
+	/**
+	 * Selects an entry by setting the selectedEntry field
+	 * @param entry the entry to be selected
+	 */
 	public static void selectEntry(TreeEntry entry) {
 		selectedEntry = entry;
 	}
 	
-	public void addUser(String ID, UserGroup parentGroup) {
-		
+	public void addUser(String ID, String parentGroupID) {
+		//Get parent UserGroup
+		UserGroup parentGroup = getGroupByID(parentGroupID);
+		//Add the user to the parent group's entries list
+		parentGroup.addUser(ID);
 	}
 
-	public void addGroup(String ID, UserGroup parentGroup) {
-		
+	public void addGroup(String ID, String parentGroupID) {
+		UserGroup parentGroup = getGroupByID(parentGroupID);
+		//Add the user group to the parent group's entries list
+		parentGroup.addUserGroup(ID);
 	}
 
 	/**
@@ -65,6 +80,15 @@ public class AdminController implements AdminInterface {
 
 	public void showPosMessagesTotal() {
 
+	}
+	
+	/**
+	 * Gets the current selected TreeEntry
+	 * 
+	 * @return the selected TreeEntry
+	 */
+	public TreeEntry getSelectedEntry() {
+		return selectedEntry;
 	}
 	
 	public static User getUserByID(String ID) {

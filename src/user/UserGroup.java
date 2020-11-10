@@ -31,8 +31,7 @@ public class UserGroup extends TreeEntry {
 	}
 	
 	/**
-	 * Adds a user to a UserGroup's entries list. Used for when the parent UserGroup is
-	 * known, and just needs the entries list to be updated with the new user.
+	 * Adds a User to *this* UserGroup's entries list.
 	 * 
 	 * @param ID the ID of the new User
 	 */
@@ -42,24 +41,9 @@ public class UserGroup extends TreeEntry {
 	}
 	
 	/**
-	 * Adds a User to a specified UserGroup's (AKA the "parent's") entries list. Used for when
-	 * the parent UserGroup is unknown, in which a helper method is used to find the UserGroup.
-	 * After the parent UserGroup is found, the other one-argument method is used to add the User
-	 * to it.
+	 * Adds a UserGroup to *this* UserGroup's entries list.
 	 * 
-	 * @param ID the ID of the user to be added
-	 * @param parentID the ID of the new User's parent group
-	 */
-	public void addUser(String ID, String parentID) {
-		UserGroup parent = findGroupByID(parentID);
-		parent.addUser(ID);
-	}
-	
-	/**
-	 * Adds a UserGroup to a UserGroup's entries list. Used for when the parent UserGroup
-	 * is known, and just needs the entries list to be updated with the new user group.
-	 * 
-	 * @param ID the ID of the user group
+	 * @param ID the ID of the new UserGroup
 	 */
 	public void addUserGroup(String ID) {
 		TreeEntry newGroup = new UserGroup(ID);
@@ -67,16 +51,11 @@ public class UserGroup extends TreeEntry {
 	}
 	
 	/**
-	 * Adds a UserGroup to a specified UserGroup's (the "parent's") entries list. Used for when
-	 * the parent UserGroup is unknown, in which a helper method is used to find the UserGroup. After
-	 * it is found, the other one-argument method is used to add the UserGroup to it.
-	 * 
-	 * @param ID the ID of the UserGroup to be added
-	 * @param parentID the ID of the parent UserGroup
+	 * Gets *this* UserGroup's parent UserGroup
+	 * @return the parent UserGroup
 	 */
-	public void addUserGroup(String ID, String parentID) {
-		UserGroup parent = findGroupByID(parentID);
-		parent.addUser(ID);
+	public UserGroup getParent() {
+		return this.parent;
 	}
 	
 	/**
