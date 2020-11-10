@@ -22,6 +22,9 @@ public class User extends UserSubject implements Observer{
 	
 	public void followUser(String ID) {
 		
+		//When following a user, the following view and feed need to be updated
+		updateFollowingView();
+		updateFeed();
 	}
 	
 	public void postTweet(String message) {
@@ -34,7 +37,7 @@ public class User extends UserSubject implements Observer{
 		
 	}
 	
-	public void updateFeed(String msg) {
+	public void updateFeed() {
 		
 	}
 

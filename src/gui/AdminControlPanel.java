@@ -44,29 +44,13 @@ public class AdminControlPanel {
 	private final DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("(empty)");
 	
 	private static AdminController adminController = AdminController.getInstance();
-	
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdminControlPanel window = new AdminControlPanel();
-					window.mainAppWindow.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
 	 */
 	public AdminControlPanel() {
 		initialize();
+		mainAppWindow.setVisible(true);
 	}
 
 	/**
@@ -164,11 +148,13 @@ public class AdminControlPanel {
 					userDialog.setVisible(true);
 					
 					String inputID = userDialog.getID();
-					
-					DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-					DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
-					//Insert element
-					model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
+					//Checks if cancel button was pressed or no text was entered
+					if(inputID != null) {
+						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+						//Insert element
+						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
+					}
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -198,17 +184,20 @@ public class AdminControlPanel {
 					
 					String inputID = groupDialog.getID();
 					
-					//Get tree model
-					DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-					//Set target node to insert into
-					DefaultMutableTreeNode insertionNode = selectedNode;
-					//Insert Node
-					model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
-					
-					//Switch insertion node to the most recent node we just added
-					insertionNode = insertionNode.getLastLeaf();
-					//Insert empty node as a placeholder
-					model.insertNodeInto(emptyNode, insertionNode, insertionNode.getChildCount());
+					//Checks if cancel button was pressed or no text was entered
+					if(inputID != null) {
+						//Get tree model
+						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						//Set target node to insert into
+						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+						//Insert Node
+						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
+						
+						//Switch insertion node to the most recent node we just added
+						insertionNode = insertionNode.getLastLeaf();
+						//Insert empty node as a placeholder
+						model.insertNodeInto(emptyNode, insertionNode, insertionNode.getChildCount());
+					}
 					
 				}catch(Exception ex) {
 					ex.printStackTrace();

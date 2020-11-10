@@ -15,4 +15,8 @@ public abstract class TreeEntry {
 		//Don't return a direct reference to ID
 		return String.copyValueOf(ID.toCharArray());
 	}
+	
+	public String toString() {
+		return ID;
+	}
 }
