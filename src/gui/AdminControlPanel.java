@@ -152,7 +152,7 @@ public class AdminControlPanel {
 					if(inputID != null) {
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
-						//Insert element
+						//Insert node
 						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
 					}
 				}catch(Exception ex) {
