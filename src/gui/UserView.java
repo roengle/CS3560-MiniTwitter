@@ -173,15 +173,9 @@ public class UserView extends JFrame {
 		//Unlock buttons
 		btnFollowUser.setEnabled(true);
 		btnTweetMessage.setEnabled(true);
+		txtIDInput.setText(user.getID());
 		//Update following view
-		DefaultListModel listModel = (DefaultListModel)listFollowing.getModel();
-		for(String s : user.getFollowings()) {
-			listModel.addElement(s);
-		}
+		listFollowing = new JList(user.getFollowings().toArray());
 		//TODO:Update tweet feed
-		listModel = (DefaultListModel)listFeed.getModel();
-		for(String s : user.getFeed()) {
-			
-		}
 	}
 }

@@ -234,6 +234,12 @@ public class AdminControlPanel {
 			public void actionPerformed(ActionEvent e) {
 				//Get ID of node that is selected.
 				//Instantiate a new UserView class and set its user
+				String userID = selectedNode.getUserObject().toString();
+				User userToBringUp = AdminController.getUserByID(userID);
+				
+				UserView newView = new UserView();
+				newView.setUser(userToBringUp);
+				newView.setVisible(true);
 			}
 		});
 		//Initially set to disabled
