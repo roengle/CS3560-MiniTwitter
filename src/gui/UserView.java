@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.JSeparator;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
@@ -99,7 +100,7 @@ public class UserView extends JFrame {
 		listFollowingScrollPane.setViewportView(listFollowing);
 		listFollowing.setBorder(null);
 		listFollowing.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Bob", "Steve", "jeff", "john", "nana", "ashley", "bob", "arush", "seth", "matt", "christos"};
+			String[] values = new String[] {};
 			public int getSize() {
 				return values.length;
 			}
@@ -130,7 +131,7 @@ public class UserView extends JFrame {
 		
 		listFeed = new JList();
 		listFeed.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Bob: Horror night sucks", "Ashley: Rob is sooooo smart.", "Nana: Johannsen is the homie.", "Ivan: So I broke my wrist again....", "Rob: Why is CS3560 taking up all my time?!?!?!?", "PhysicsTweets: Good luck on your exam thursday!", "a", "b", "c", "d", "e", "f", "g"};
+			String[] values = new String[] {};
 			public int getSize() {
 				return values.length;
 			}
@@ -157,11 +158,12 @@ public class UserView extends JFrame {
 	 */
 	public UserView(User user) {
 		this();
-		this.user = user;
+		setUser(user);
 	}
 	
 	/**
-	 * Set's the UserView's user field.
+	 * Set's the UserView's user field. Also initializes following list to User's
+	 * followings list
 	 * 
 	 * @param user the User object to set the user field to
 	 */
@@ -171,8 +173,15 @@ public class UserView extends JFrame {
 		//Unlock buttons
 		btnFollowUser.setEnabled(true);
 		btnTweetMessage.setEnabled(true);
-		//TODO:Update following view
+		//Update following view
+		DefaultListModel listModel = (DefaultListModel)listFollowing.getModel();
+		for(String s : user.getFollowings()) {
+			listModel.addElement(s);
+		}
 		//TODO:Update tweet feed
-		
+		listModel = (DefaultListModel)listFeed.getModel();
+		for(String s : user.getFeed()) {
+			
+		}
 	}
 }

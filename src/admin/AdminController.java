@@ -1,5 +1,6 @@
 package admin;
 
+import gui.AdminControlPanel;
 import user.TreeEntry;
 import user.User;
 import user.UserGroup;
@@ -8,9 +9,10 @@ public class AdminController implements AdminInterface {
 	//Static instance field for AdminController singleton
 	private static volatile AdminController instance = null;
 	
-	/* Instance fields */
+	/* Static fields */
 	private static UserGroup rootUserGroup;
 	private static TreeEntry selectedEntry;
+	private static AdminControlPanel controlPanel;
 	
 	/**
 	 * A private constructor for AdminController to obey singleton pattern
@@ -26,22 +28,18 @@ public class AdminController implements AdminInterface {
 	 * @return current or new instance of AdminController
 	 */
 	public static AdminController getInstance() {
-		return instance == null ? new AdminController() : instance;
-	}
-	
-	/**
-	 * Sets the AdminController's root group
-	 * @param root the UserGroup object representing root
-	 */
-	public static void setRootGroup(UserGroup root) {
-		rootUserGroup = root;
+		if(instance == null) {
+			instance = new AdminController();
+			rootUserGroup = new UserGroup("root");
+		}
+		return instance;
 	}
 	
 	/**
 	 * Selects an entry by setting the selectedEntry field
 	 * @param entry the entry to be selected
 	 */
-	public static void selectEntry(TreeEntry entry) {
+	public void selectEntry(TreeEntry entry) {
 		selectedEntry = entry;
 	}
 	
@@ -59,13 +57,14 @@ public class AdminController implements AdminInterface {
 	}
 
 	/**
+	 * Sets the AdminController's controlPanel field to that of our AdminControlPanel GUI object
 	 * 
-	 * Assumption: selectedEntry != null && selectedEntry instanceof UserGroup
+	 * @param panel the AdminControlPanel object to be associated with AdminController
 	 */
-	public void openUserView() {
-
+	public void setControlPanel(AdminControlPanel panel) {
+		controlPanel = panel;
 	}
-
+	
 	public void showUserTotal() {
 
 	}
@@ -82,6 +81,9 @@ public class AdminController implements AdminInterface {
 
 	}
 	
+	public TreeEntry getRootEntry() {
+		return rootUserGroup;
+	}
 	/**
 	 * Gets the current selected TreeEntry
 	 * 
@@ -91,12 +93,37 @@ public class AdminController implements AdminInterface {
 		return selectedEntry;
 	}
 	
+	/**
+	 * Finds a User object given a user ID
+	 * 
+	 * @param ID the ID of the User to get
+	 * @return the User object if it exists, otherwise null
+	 */
 	public static User getUserByID(String ID) {
 		return rootUserGroup.findUserByID(ID);
 	}
 	
+	/**
+	 * Finds a UserGroup object given a group ID
+	 * 
+	 * @param ID the ID of the UserGroup to get
+	 * @return the UserGroup object if it exists, otherwise null
+	 */
 	public static UserGroup getGroupByID(String ID) {
 		return rootUserGroup.findGroupByID(ID);
+	}
+	
+	/**
+	 * Sets the AdminController's root group
+	 * @param root the UserGroup object representing root
+	 */
+	public void setRootGroup(UserGroup root) {
+		rootUserGroup = root;
+	}
+	
+	public void printAllEntries() {
+		System.out.println(rootUserGroup.getID() + " - " + rootUserGroup.getClass().getName());
+		rootUserGroup.printAllEntries();
 	}
 
 }

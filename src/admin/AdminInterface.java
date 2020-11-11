@@ -7,9 +7,6 @@ public interface AdminInterface {
 	
 	void addGroup(String ID, String parentGroup);
 	
-	//selectedEntry != null && selectedEntry instanceof UserGroup
-	void openUserView();
-	
 	void showUserTotal();
 	
 	void showGroupTotal();

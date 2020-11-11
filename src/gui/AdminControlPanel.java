@@ -19,6 +19,9 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import admin.AdminController;
+import user.TreeEntry;
+import user.User;
+import user.UserGroup;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.event.TreeSelectionListener;
@@ -41,7 +44,7 @@ public class AdminControlPanel {
 	private JButton btnOpenUserView;
 	
 	private DefaultMutableTreeNode selectedNode;
-	private final DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("(empty)");
+	private final DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode(new User("(empty)"));
 	
 	private static AdminController adminController = AdminController.getInstance();
 
@@ -57,6 +60,9 @@ public class AdminControlPanel {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		//Set the adminController's control panel to this AdminControlPanel
+		adminController.setControlPanel(this);
+		
 		mainAppWindow = new JFrame();
 		mainAppWindow.setResizable(false);
 		mainAppWindow.setTitle("MiniTwitter Admin");
@@ -67,6 +73,7 @@ public class AdminControlPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 156, 242);
 		mainAppWindow.getContentPane().add(scrollPane);
+		
 		
 		tree = new JTree();
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -79,22 +86,23 @@ public class AdminControlPanel {
                         tree.getLastSelectedPathComponent();
 				selectedNode = node;
 				try {
-					String nodeName = (String)node.getUserObject();
+					String nodeName = node.getUserObject().toString() == null ? "" : node.getUserObject().toString();
 					//If user
-					if(node.isLeaf()) {
-						btnOpenUserView.setEnabled(true);
-						
+					if(node.isLeaf()){
+						if(!nodeName.equals("(empty)")) {
+							btnOpenUserView.setEnabled(true);
+						}else {
+							btnOpenUserView.setEnabled(false);
+						}
 						DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-						String nodeParentName = (String)parent.getUserObject();
+						String nodeParentName = (String)parent.getUserObject().toString();
 						txtUserInput.setText(nodeName);
 						txtGroupInput.setText(nodeParentName);
 					}else {
 						btnOpenUserView.setEnabled(false);
-						
 						txtUserInput.setText(null);
 						txtGroupInput.setText(nodeName);
 					}
-					
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -103,29 +111,15 @@ public class AdminControlPanel {
 		});
 		tree.setExpandsSelectedPaths(true);
 		tree.setShowsRootHandles(true);
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(adminController.getRootEntry());
 		tree.setModel(new DefaultTreeModel(
-			new DefaultMutableTreeNode("Root") {
+			new DefaultMutableTreeNode(root) {
 				{
-					DefaultMutableTreeNode node_1;
-					DefaultMutableTreeNode node_2;
-					add(new DefaultMutableTreeNode("President"));
-					node_1 = new DefaultMutableTreeNode("CS");
-						node_2 = new DefaultMutableTreeNode("CS2640");
-							node_2.add(new DefaultMutableTreeNode("David"));
-						node_1.add(node_2);
-						node_2 = new DefaultMutableTreeNode("CS3560");
-							node_2.add(new DefaultMutableTreeNode("Ashley"));
-							node_2.add(new DefaultMutableTreeNode("Bob"));
-						node_1.add(node_2);
-						node_2 = new DefaultMutableTreeNode("NewGroup");
-							node_2.add(new DefaultMutableTreeNode("(empty)"));
-						node_1.add(node_2);
-					add(node_1);
+					add(new DefaultMutableTreeNode(emptyNode));
 				}
 			}
 		));
 		
-		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		scrollPane.setViewportView(tree);
 		
 		txtUserInput = new JTextField();
@@ -152,8 +146,20 @@ public class AdminControlPanel {
 					if(inputID != null) {
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+						//Remove node "(empty)" if it exists
+						if(insertionNode.getChildCount() == 1) {
+							DefaultMutableTreeNode child = (DefaultMutableTreeNode) insertionNode.getChildAt(0);
+							if(child.getUserObject().toString().equals("(empty)")) {
+								model.removeNodeFromParent(child);
+							}
+						}
 						//Insert node
 						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
+					
+						UserGroup parentGroup = AdminController.getGroupByID(insertionNode.getUserObject().toString());
+						User newUser = new User(inputID, parentGroup);
+						parentGroup.addUser(newUser);
+						adminController.printAllEntries();
 					}
 				}catch(Exception ex) {
 					ex.printStackTrace();
@@ -190,24 +196,46 @@ public class AdminControlPanel {
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						//Set target node to insert into
 						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
+						//Remove node "(empty)" if it exists
+						if(insertionNode.getChildCount() == 1) {
+							DefaultMutableTreeNode child = (DefaultMutableTreeNode) insertionNode.getChildAt(0);
+							if(child.getUserObject().toString().equals("(empty)")) {
+								model.removeNodeFromParent(child);
+							}
+						}
 						//Insert Node
 						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
-						
 						//Switch insertion node to the most recent node we just added
-						insertionNode = insertionNode.getLastLeaf();
+						DefaultMutableTreeNode insertionNodeNext = insertionNode.getLastLeaf();
 						//Insert empty node as a placeholder
-						model.insertNodeInto(emptyNode, insertionNode, insertionNode.getChildCount());
+						DefaultMutableTreeNode emptyCopy = new DefaultMutableTreeNode(new User("(empty)"));
+						model.insertNodeInto(emptyCopy, insertionNodeNext, insertionNodeNext.getChildCount());
+						
+						//error here
+						System.out.println("Attempting to add " + inputID + " into group " + txtGroupInput.getText());
+						UserGroup parentGroup = AdminController.getGroupByID(insertionNode.getUserObject().toString());
+						System.out.println("parent group: " + parentGroup.getID() + " - " + parentGroup.getClass().getName());
+						UserGroup newGroup = new UserGroup(inputID, parentGroup);
+						parentGroup.addUserGroup(newGroup);
 					}
 					
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
+				
+				adminController.printAllEntries();
 			}
 		});
 		btnAddGroup.setBounds(325, 51, 99, 29);
 		mainAppWindow.getContentPane().add(btnAddGroup);
 		
 		btnOpenUserView = new JButton("Open User View");
+		btnOpenUserView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Get ID of node that is selected.
+				//Instantiate a new UserView class and set its user
+			}
+		});
 		//Initially set to disabled
 		btnOpenUserView.setEnabled(false);
 		btnOpenUserView.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -249,7 +277,15 @@ public class AdminControlPanel {
 		lblNewLabel_1.setBounds(168, 51, 47, 27);
 		mainAppWindow.getContentPane().add(lblNewLabel_1);
 		
-		//Initialize starting node
-		selectedNode = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	}
+	
+	
+	public void addUserToTree(TreeEntry user) {
+		
+	}
+	
+	public void addGroupToTree(TreeEntry group) {
+		
+	}
+	
 }

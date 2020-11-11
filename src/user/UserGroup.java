@@ -1,5 +1,6 @@
 package user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserGroup extends TreeEntry {
@@ -15,6 +16,7 @@ public class UserGroup extends TreeEntry {
 	public UserGroup(String ID) {
 		super(ID);
 		parent = null;
+		entries = new ArrayList<>();
 	}
 	
 	/**
@@ -28,6 +30,7 @@ public class UserGroup extends TreeEntry {
 	public UserGroup(String ID, UserGroup parent) {
 		super(ID);
 		this.parent = parent;
+		entries = new ArrayList<>();
 	}
 	
 	/**
@@ -40,6 +43,10 @@ public class UserGroup extends TreeEntry {
 		entries.add(newUser);
 	}
 	
+	public void addUser(User user) {
+		entries.add(user);
+	}
+	
 	/**
 	 * Adds a UserGroup to *this* UserGroup's entries list.
 	 * 
@@ -47,6 +54,10 @@ public class UserGroup extends TreeEntry {
 	 */
 	public void addUserGroup(String ID) {
 		TreeEntry newGroup = new UserGroup(ID);
+		entries.add(newGroup);
+	}
+	
+	public void addUserGroup(UserGroup newGroup) {
 		entries.add(newGroup);
 	}
 	
@@ -71,7 +82,11 @@ public class UserGroup extends TreeEntry {
 			if(entry instanceof User && entry.getID().equals(ID)) {
 				return (User)entry;
 			}
+			if(entry instanceof UserGroup) {
+				return ((UserGroup) entry).findUserByID(ID);
+			}
 		}
+		//TODO: recursively search subdirectories AND FIX IT
 		return null;
 	}
 	
@@ -84,12 +99,31 @@ public class UserGroup extends TreeEntry {
 	 * @return the UserGroup object if it exists, null otherwise
 	 */
 	public UserGroup findGroupByID(String ID) {
+		//If getting root User Group
+		if(this.getID().equals(ID)) {
+			return this;
+		}
 		for(TreeEntry entry : entries) {
 			if(entry instanceof UserGroup && entry.getID().equals(ID)) {
 				return (UserGroup)entry;
 			}
+			if(entry instanceof UserGroup) {
+				return ((UserGroup) entry).findGroupByID(ID);
+			}
 		}
 		return null;
+	}
+	
+	public void printAllEntries() {
+		for(int i = 0; i < entries.size(); i++){
+			TreeEntry element = entries.get(i);
+			System.out.println(element.getID() + " - " + element.getClass().getName());
+			if(element instanceof UserGroup) {
+				System.out.print("\t");
+				((UserGroup) element).printAllEntries();
+				System.out.println();
+			}
+		}
 	}
 	
 }

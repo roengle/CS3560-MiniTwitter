@@ -1,10 +1,11 @@
 package user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import admin.AdminController;
 
-public class User extends UserSubject implements Observer{
+public class User extends UserSubject implements Observer {
 	
 	/* Instance fields*/
 	private UserGroup parentGroup;
@@ -12,6 +13,8 @@ public class User extends UserSubject implements Observer{
 	private List<String> followings;
 	private List<String> feed;
 	private String mostRecentMessage;
+	
+	
 	
 	/* List<Observer> inherited from UserSubject! */
 	
@@ -28,11 +31,25 @@ public class User extends UserSubject implements Observer{
 	 */
 	public User(String ID) {
 		super(ID);
+		initializeLists();
 	}
 	
 	public User(String ID, String parentID) {
 		super(ID);
 		this.parentGroup = AdminController.getGroupByID(parentID);
+		initializeLists();
+	}
+	
+	public User(String ID, UserGroup parentGroup) {
+		super(ID);
+		this.parentGroup = parentGroup;
+		initializeLists();
+	}
+	
+	public void initializeLists() {
+		followers = new ArrayList<>();
+		followings = new ArrayList<>();
+		feed = new ArrayList<>();
 	}
 	
 	/**
@@ -68,7 +85,7 @@ public class User extends UserSubject implements Observer{
 	 * (4) Notify observers
 	 * 		(4a) In the User(s) notified, the most recent message field is read updated into their feed
 	 * 
-	 * @param message
+	 * @param message the message to tweet
 	 */
 	public void postTweet(String message) {
 		//Update our own feed with our own message
@@ -93,22 +110,40 @@ public class User extends UserSubject implements Observer{
 	}
 
 	/**
+	 * Sets this User's parent UserGroup
+	 * 
+	 * @param parent the UserGroup that is the parent
+	 */
+	public void setParent(UserGroup parent) {
+		this.parentGroup = parent;
+	}
+	/**
+	 * Gets the User's feed list
+	 * 
+	 * @return the feed list
+	 */
+	public List<String> getFeed() { return this.feed; }
+	
+	/**
+	 * Gets the User's followings list
+	 * 
+	 * @return the followings list
+	 */
+	public List<String> getFollowings(){ return this.followings; }
+	
+	/**
 	 * Returns *this* User's most recent message, which is in the mostRecentMessage field
 	 * 
 	 * @return the most recent message of this User
 	 */
-	public String getMostRecentMessage() {
-		return this.mostRecentMessage;
-	}
+	public String getMostRecentMessage() { return this.mostRecentMessage; }
 	
 	/**
 	 * Returns *this* User's parent UserGroup.
 	 * 
 	 * @return the parent UserGroup
 	 */
-	public UserGroup getParentGroup() {
-		return this.parentGroup;
-	}
+	public UserGroup getParentGroup() { return this.parentGroup; }
 	
 	
 	@Override
@@ -131,6 +166,7 @@ public class User extends UserSubject implements Observer{
 		if(msg != null) {
 			String formattedString = String.format("%s: %s", id, msg);
 			feed.add(formattedString);
+			//TODO: update feed GUI
 		}
 	}
 	
