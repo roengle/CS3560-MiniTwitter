@@ -148,6 +148,22 @@ public class UserView extends JFrame {
 		contentPane.add(separator_1);
 		
 		btnTweetMessage = new JButton("Tweet Message");
+		btnTweetMessage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NewTweetDialog tweetDialog = new NewTweetDialog();
+				
+				tweetDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				tweetDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				tweetDialog.setVisible(true);
+				
+				//Get input tweet from the dialog
+				String tweet = tweetDialog.getMessage();
+				//Add to GUI
+				((DefaultListModel)listFeedModel).addElement((user.getID() + ":"+ tweet));
+				
+				user.postTweet(tweet);
+			}
+		});
 		btnTweetMessage.setEnabled(false);
 		btnTweetMessage.setToolTipText("Click to open a dialog that allows for messages to be tweeted from your account.");
 		btnTweetMessage.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -168,7 +184,7 @@ public class UserView extends JFrame {
 	 */
 	public UserView(User user) {
 		this();
-		setUser(user);
+		setUser(user);	
 	}
 	
 	/**
@@ -188,5 +204,11 @@ public class UserView extends JFrame {
 		listFollowing = new JList(user.getFollowings().toArray());
 		//TODO:Update tweet feed
 		listFeed = new JList(user.getFeed().toArray());
+		
+		user.setUserView(this);
+	}
+	
+	public void updateFeed(String msg) {
+		((DefaultListModel)listFeedModel).addElement(msg);
 	}
 }

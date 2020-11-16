@@ -96,7 +96,7 @@ public class User extends UserSubject implements Observer {
 		String formattedString = String.format("%s: %s", this.getID(), message);
 		feed.add(formattedString);
 		//Set our most recent message
-		this.mostRecentMessage = message;
+		this.mostRecentMessage = formattedString;
 		//Notify our observers that we posted a message
 		notifyObservers();
 		
@@ -110,6 +110,17 @@ public class User extends UserSubject implements Observer {
 	public void setParent(UserGroup parent) {
 		this.parentGroup = parent;
 	}
+	
+	/**
+	 * Sets the corresponding user view to allow for this User's update method to 
+	 * reflect on the GUI elements in the UserView object
+	 * 
+	 * @param view the UserView object
+	 */
+	public void setUserView(UserView view) {
+		this.userView = view;
+	}
+	
 	/**
 	 * Gets the User's feed list
 	 * 
@@ -157,9 +168,9 @@ public class User extends UserSubject implements Observer {
 		String msg = ((User)userSubject).getMostRecentMessage();
 		//If just getting a new follower, msg will be null so don't update feed
 		if(msg != null) {
-			String formattedString = String.format("%s: %s", id, msg);
-			feed.add(formattedString);
-			//TODO: update feed GUI
+			feed.add(msg);
+			//Update feed GUI
+			userView.updateFeed(msg);
 		}
 	}
 	
