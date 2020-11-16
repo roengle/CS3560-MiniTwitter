@@ -1,18 +1,16 @@
 package admin;
 
-import gui.AdminControlPanel;
 import user.TreeEntry;
 import user.User;
 import user.UserGroup;
 
-public class AdminController implements AdminInterface {
+public class AdminController {
 	//Static instance field for AdminController singleton
 	private static volatile AdminController instance = null;
 	
 	/* Static fields */
 	private static UserGroup rootUserGroup;
 	private static TreeEntry selectedEntry;
-	private static AdminControlPanel controlPanel;
 	
 	/**
 	 * A private constructor for AdminController to obey singleton pattern
@@ -43,28 +41,6 @@ public class AdminController implements AdminInterface {
 		selectedEntry = entry;
 	}
 	
-	public void addUser(String ID, String parentGroupID) {
-		//Get parent UserGroup
-		UserGroup parentGroup = getGroupByID(parentGroupID);
-		//Add the user to the parent group's entries list
-		parentGroup.addUser(ID);
-	}
-
-	public void addGroup(String ID, String parentGroupID) {
-		UserGroup parentGroup = getGroupByID(parentGroupID);
-		//Add the user group to the parent group's entries list
-		parentGroup.addUserGroup(ID);
-	}
-
-	/**
-	 * Sets the AdminController's controlPanel field to that of our AdminControlPanel GUI object
-	 * 
-	 * @param panel the AdminControlPanel object to be associated with AdminController
-	 */
-	public void setControlPanel(AdminControlPanel panel) {
-		controlPanel = panel;
-	}
-	
 	public void showUserTotal() {
 
 	}
@@ -81,7 +57,7 @@ public class AdminController implements AdminInterface {
 
 	}
 	
-	public TreeEntry getRootEntry() {
+	public static TreeEntry getRootEntry() {
 		return rootUserGroup;
 	}
 	/**
@@ -89,7 +65,7 @@ public class AdminController implements AdminInterface {
 	 * 
 	 * @return the selected TreeEntry
 	 */
-	public TreeEntry getSelectedEntry() {
+	public static TreeEntry getSelectedEntry() {
 		return selectedEntry;
 	}
 	
@@ -117,14 +93,14 @@ public class AdminController implements AdminInterface {
 	 * Sets the AdminController's root group
 	 * @param root the UserGroup object representing root
 	 */
-	public void setRootGroup(UserGroup root) {
+	public static void setRootGroup(UserGroup root) {
 		rootUserGroup = root;
 	}
 	
-	public void printAllEntries() {
+	public static void printAllEntries() {
 		System.out.println(rootUserGroup.getID() + " - " + rootUserGroup.getClass().getName());
-		rootUserGroup.printAllEntries();
-		System.out.println();
+		rootUserGroup.printAllEntries(1);
+		System.out.println("----------------------------");
 	}
 
 }

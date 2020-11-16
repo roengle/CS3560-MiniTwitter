@@ -2,6 +2,7 @@ package driver;
 
 import java.awt.EventQueue;
 
+import admin.AdminController;
 import gui.AdminControlPanel;
 
 public class Driver {
@@ -11,6 +12,7 @@ public class Driver {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					AdminController.getInstance();
 					AdminControlPanel window = new AdminControlPanel();
 				} catch (Exception e) {
 					e.printStackTrace();

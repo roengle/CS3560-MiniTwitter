@@ -78,12 +78,17 @@ public class UserGroup extends TreeEntry {
 	 * @return the User object if it exists, null otherwise
 	 */
 	public User findUserByID(String ID) {
+		//Loop through each entry
 		for(TreeEntry entry : entries) {
+			//User object found
 			if(entry instanceof User && entry.getID().equals(ID)) {
 				return (User)entry;
 			}
+			//TODO: test if this fix works
 			if(entry instanceof UserGroup) {
-				return ((UserGroup) entry).findUserByID(ID);
+				if(((UserGroup) entry).findUserByID(ID) != null) {
+					return ((UserGroup) entry).findUserByID(ID);
+				}
 			}
 		}
 		//TODO: recursively search subdirectories AND FIX IT
@@ -103,25 +108,33 @@ public class UserGroup extends TreeEntry {
 		if(this.getID().equals(ID)) {
 			return this;
 		}
+		//Loop through each entry
 		for(TreeEntry entry : entries) {
+			//UserGroup object found
 			if(entry instanceof UserGroup && entry.getID().equals(ID)) {
 				return (UserGroup)entry;
 			}
-			if(entry instanceof UserGroup) {
-				return ((UserGroup) entry).findGroupByID(ID);
+			else if(entry instanceof UserGroup) {
+				if(((UserGroup) entry).findGroupByID(ID) != null) {
+					return ((UserGroup) entry).findGroupByID(ID);
+				}
 			}
 		}
 		return null;
 	}
 	
-	public void printAllEntries() {
+	/**
+	 * Prints all entries in the usergroup using a depth-first search. Mainly used for debugging
+	 */
+	public void printAllEntries(int tabCount) {
 		for(int i = 0; i < entries.size(); i++){
 			TreeEntry element = entries.get(i);
+			for(int j = 0; j < tabCount; j++) {
+				System.out.print("\t");
+			}
 			System.out.println(element.getID() + " - " + element.getClass().getName());
 			if(element instanceof UserGroup) {
-				System.out.print("\t");
-				((UserGroup) element).printAllEntries();
-				System.out.println();
+				((UserGroup) element).printAllEntries(tabCount + 1);
 			}
 		}
 	}

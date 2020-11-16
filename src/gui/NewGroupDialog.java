@@ -24,6 +24,8 @@ import java.awt.SystemColor;
 import java.awt.Window.Type;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class NewGroupDialog extends JDialog {
 	
@@ -51,6 +53,13 @@ public class NewGroupDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public NewGroupDialog() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				txtGroupIDInput = null;
+				dispose();
+			}
+		});
 		setType(Type.POPUP);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setModal(true);

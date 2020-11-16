@@ -38,11 +38,14 @@ public class UserView extends JFrame {
 	private JList listFeed;
 	private ListModel listFeedModel = new DefaultListModel();
 
+	//Our two main buttons
 	private JButton btnFollowUser;
 	private JButton btnTweetMessage;
 	
+	//Text box showing our user id
 	private JTextField txtIDInput;
 	
+	//Our associated user object
 	private User user;
 
 	/**
@@ -66,6 +69,7 @@ public class UserView extends JFrame {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public UserView() {
+		//Set default settings
 		setType(Type.POPUP);
 		setTitle("User View");
 		setResizable(false);
@@ -84,25 +88,31 @@ public class UserView extends JFrame {
 		listFollowingScrollPane.setBounds(29, 81, 382, 134);
 		contentPane.add(listFollowingScrollPane);
 		
+		//Make our two lists
 		listFollowing = new JList();
 		listFollowing.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listFollowing.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		listFollowingScrollPane.setViewportView(listFollowing);
 		listFollowing.setBorder(null);
+		//Set our list's model manually
 		listFollowing.setModel(listFollowingModel);
 		
 		listFeed = new JList();
-		listFeed.setModel(listFeedModel);
+		
 		listFeed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listFeed.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		listFeed.setBorder(null);
 		listFeedScrollPane.setViewportView(listFeed);
+		//Set our list's model manually
+		listFeed.setModel(listFeedModel);
 		
+		//Our follow user button
 		btnFollowUser = new JButton("Follow User");
 		btnFollowUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Follow User dialog
 				FollowUserDialog flwUserDialog = new FollowUserDialog();
+				//Set out Id in the follow user dialog
 				flwUserDialog.setOurID(user.getID());
 				
 				//Set dialog parameters and make it visible
@@ -115,7 +125,6 @@ public class UserView extends JFrame {
 				//Have the user follow the object
 				user.followUser(inputID);
 				
-				//List<String> followings = user.getFollowings();
 				((DefaultListModel)listFollowingModel).addElement(inputID);
 			}
 		});
@@ -150,8 +159,9 @@ public class UserView extends JFrame {
 		btnTweetMessage = new JButton("Tweet Message");
 		btnTweetMessage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//New tweet dialog
 				NewTweetDialog tweetDialog = new NewTweetDialog();
-				
+				//Set window defaults
 				tweetDialog.setModalityType(ModalityType.APPLICATION_MODAL);
 				tweetDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				tweetDialog.setVisible(true);
@@ -160,7 +170,7 @@ public class UserView extends JFrame {
 				String tweet = tweetDialog.getMessage();
 				//Add to GUI
 				((DefaultListModel)listFeedModel).addElement((user.getID() + ":"+ tweet));
-				
+				//Have the user object post the tweet
 				user.postTweet(tweet);
 			}
 		});
@@ -208,6 +218,12 @@ public class UserView extends JFrame {
 		user.setUserView(this);
 	}
 	
+	/**
+	 * Updates the feed by adding the message from our following to the feed list
+	 * 
+	 * @param msg the message to update the feed with
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void updateFeed(String msg) {
 		((DefaultListModel)listFeedModel).addElement(msg);
 	}

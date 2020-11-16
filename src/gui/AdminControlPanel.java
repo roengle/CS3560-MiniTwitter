@@ -35,8 +35,10 @@ import java.util.List;
 public class AdminControlPanel {
 
 	private JFrame mainAppWindow;
+	
 	private JTextField txtUserInput;
 	private JTextField txtGroupInput;
+	
 	private JTree tree;
 	
 	private JButton btnAddUser;
@@ -45,8 +47,6 @@ public class AdminControlPanel {
 	
 	private DefaultMutableTreeNode selectedNode;
 	private final DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode(new User("(empty)"));
-	
-	private static AdminController adminController = AdminController.getInstance();
 
 	/**
 	 * Create the application.
@@ -60,8 +60,6 @@ public class AdminControlPanel {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		//Set the adminController's control panel to this AdminControlPanel
-		adminController.setControlPanel(this);
 		
 		mainAppWindow = new JFrame();
 		mainAppWindow.setResizable(false);
@@ -111,7 +109,7 @@ public class AdminControlPanel {
 		});
 		tree.setExpandsSelectedPaths(true);
 		tree.setShowsRootHandles(true);
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(adminController.getRootEntry());
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(AdminController.getRootEntry());
 		tree.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode(root) {
 				{
@@ -159,7 +157,9 @@ public class AdminControlPanel {
 						UserGroup parentGroup = AdminController.getGroupByID(insertionNode.getUserObject().toString());
 						User newUser = new User(inputID, parentGroup);
 						parentGroup.addUser(newUser);
-						adminController.printAllEntries();
+						
+						//DEBUGGING
+						AdminController.printAllEntries();
 					}
 				}catch(Exception ex) {
 					ex.printStackTrace();
@@ -211,10 +211,9 @@ public class AdminControlPanel {
 						DefaultMutableTreeNode emptyCopy = new DefaultMutableTreeNode(new User("(empty)"));
 						model.insertNodeInto(emptyCopy, insertionNodeNext, insertionNodeNext.getChildCount());
 						
-						//error here
-						System.out.println("Attempting to add " + inputID + " into group " + txtGroupInput.getText());
+						//System.out.println("Attempting to add " + inputID + " into group " + txtGroupInput.getText());
 						UserGroup parentGroup = AdminController.getGroupByID(insertionNode.getUserObject().toString());
-						System.out.println("parent group: " + parentGroup.getID() + " - " + parentGroup.getClass().getName());
+						//System.out.println("parent group: " + parentGroup.getID() + " - " + parentGroup.getClass().getName());
 						UserGroup newGroup = new UserGroup(inputID, parentGroup);
 						parentGroup.addUserGroup(newGroup);
 					}
@@ -223,7 +222,8 @@ public class AdminControlPanel {
 					ex.printStackTrace();
 				}
 				
-				adminController.printAllEntries();
+				// DEBUGGING
+				AdminController.printAllEntries();
 			}
 		});
 		btnAddGroup.setBounds(325, 51, 99, 29);
@@ -284,15 +284,6 @@ public class AdminControlPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_1.setBounds(168, 51, 47, 27);
 		mainAppWindow.getContentPane().add(lblNewLabel_1);
-		
-	}
-	
-	
-	public void addUserToTree(TreeEntry user) {
-		
-	}
-	
-	public void addGroupToTree(TreeEntry group) {
 		
 	}
 	
