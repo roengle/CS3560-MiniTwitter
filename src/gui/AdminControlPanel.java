@@ -238,6 +238,8 @@ public class AdminControlPanel {
 				User userToBringUp = AdminController.getUserByID(userID);
 				
 				UserView newView = new UserView();
+				
+				newView.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				newView.setUser(userToBringUp);
 				newView.setVisible(true);
 			}

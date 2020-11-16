@@ -124,6 +124,7 @@ public class AdminController implements AdminInterface {
 	public void printAllEntries() {
 		System.out.println(rootUserGroup.getID() + " - " + rootUserGroup.getClass().getName());
 		rootUserGroup.printAllEntries();
+		System.out.println();
 	}
 
 }

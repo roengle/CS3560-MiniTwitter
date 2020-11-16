@@ -1,5 +1,6 @@
 package user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class UserSubject extends TreeEntry{
@@ -14,6 +15,7 @@ public abstract class UserSubject extends TreeEntry{
 	 */
 	public UserSubject(String ID) {
 		super(ID);
+		observers = new ArrayList<>();
 	}
 	
 	/**

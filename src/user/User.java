@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import admin.AdminController;
+import gui.UserView;
 
 public class User extends UserSubject implements Observer {
 	
@@ -13,6 +14,8 @@ public class User extends UserSubject implements Observer {
 	private List<String> followings;
 	private List<String> feed;
 	private String mostRecentMessage;
+	
+	private UserView userView;
 	
 	
 	
@@ -63,17 +66,18 @@ public class User extends UserSubject implements Observer {
 	 */
 	public void followUser(String ID) {
 		//Get the user object
-		UserSubject user = AdminController.getUserByID(ID);
+		UserSubject userSubject = AdminController.getUserByID(ID);
 		//Since the User class is also an observer, we can attach *this* to the user's observers
-		user.attach(this);
+		userSubject.attach(this);
 		//Add the users ID to our followings list
-		followings.add(user.getID());
+		followings.add(ID);
 		//Set most recent message to null
 		mostRecentMessage = null;
 		//Notify the specific observer. Since mostRecentMessage is null, it will only update its followers list
-		notifyObserver((User)user);
+		notifyObserver((User)userSubject);
 		//When following a user, the following view needs to be updated
-		updateFollowingView(ID);
+		followings.add(ID);
+		
 	}
 	
 	/**
@@ -96,17 +100,6 @@ public class User extends UserSubject implements Observer {
 		//Notify our observers that we posted a message
 		notifyObservers();
 		
-	}
-	
-	/**
-	 * Update our following view given an ID. Adds the ID to our followings list and updates the GUI list view
-	 * that represents our followings.
-	 * 
-	 * @param ID the ID of the User we are following
-	 */
-	public void updateFollowingView(String ID) {
-		followings.add(ID);
-		//TODO: Update GUI elements
 	}
 
 	/**

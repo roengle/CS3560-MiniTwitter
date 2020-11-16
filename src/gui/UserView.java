@@ -9,9 +9,12 @@ import javax.swing.border.EmptyBorder;
 import user.User;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Dialog.ModalityType;
 import java.util.List;
 
 import javax.swing.JSeparator;
@@ -20,6 +23,9 @@ import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Window.Type;
 
 public class UserView extends JFrame {
 
@@ -27,11 +33,10 @@ public class UserView extends JFrame {
 	
 	@SuppressWarnings("rawtypes")
 	private JList listFollowing;
+	private ListModel listFollowingModel = new DefaultListModel();
 	@SuppressWarnings("rawtypes")
 	private JList listFeed;
-	
-	private List<String> localFollowings;
-	private List<String> localFeed;
+	private ListModel listFeedModel = new DefaultListModel();
 
 	private JButton btnFollowUser;
 	private JButton btnTweetMessage;
@@ -61,6 +66,7 @@ public class UserView extends JFrame {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public UserView() {
+		setType(Type.POPUP);
 		setTitle("User View");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,7 +76,49 @@ public class UserView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JScrollPane listFeedScrollPane = new JScrollPane();
+		listFeedScrollPane.setBounds(29, 314, 382, 180);
+		contentPane.add(listFeedScrollPane);
+		
+		JScrollPane listFollowingScrollPane = new JScrollPane();
+		listFollowingScrollPane.setBounds(29, 81, 382, 134);
+		contentPane.add(listFollowingScrollPane);
+		
+		listFollowing = new JList();
+		listFollowing.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listFollowing.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		listFollowingScrollPane.setViewportView(listFollowing);
+		listFollowing.setBorder(null);
+		listFollowing.setModel(listFollowingModel);
+		
+		listFeed = new JList();
+		listFeed.setModel(listFeedModel);
+		listFeed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listFeed.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		listFeed.setBorder(null);
+		listFeedScrollPane.setViewportView(listFeed);
+		
 		btnFollowUser = new JButton("Follow User");
+		btnFollowUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Follow User dialog
+				FollowUserDialog flwUserDialog = new FollowUserDialog();
+				flwUserDialog.setOurID(user.getID());
+				
+				//Set dialog parameters and make it visible
+				flwUserDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				flwUserDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				flwUserDialog.setVisible(true);
+				
+				//Get validated input ID of user to follow
+				String inputID = flwUserDialog.getID();
+				//Have the user follow the object
+				user.followUser(inputID);
+				
+				//List<String> followings = user.getFollowings();
+				((DefaultListModel)listFollowingModel).addElement(inputID);
+			}
+		});
 		btnFollowUser.setEnabled(false);
 		btnFollowUser.setBounds(259, 11, 152, 34);
 		contentPane.add(btnFollowUser);
@@ -90,25 +138,6 @@ public class UserView extends JFrame {
 		separator.setBounds(29, 56, 382, 2);
 		contentPane.add(separator);
 		
-		JScrollPane listFollowingScrollPane = new JScrollPane();
-		listFollowingScrollPane.setBounds(29, 81, 382, 134);
-		contentPane.add(listFollowingScrollPane);
-		
-		listFollowing = new JList();
-		listFollowing.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listFollowing.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		listFollowingScrollPane.setViewportView(listFollowing);
-		listFollowing.setBorder(null);
-		listFollowing.setModel(new AbstractListModel() {
-			String[] values = new String[] {};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		
 		JLabel lblView = new JLabel("View (Currently Following)");
 		lblView.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblView.setBounds(29, 56, 170, 24);
@@ -124,25 +153,6 @@ public class UserView extends JFrame {
 		btnTweetMessage.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnTweetMessage.setBounds(29, 244, 382, 34);
 		contentPane.add(btnTweetMessage);
-		
-		JScrollPane listFeedScrollPane = new JScrollPane();
-		listFeedScrollPane.setBounds(29, 314, 382, 180);
-		contentPane.add(listFeedScrollPane);
-		
-		listFeed = new JList();
-		listFeed.setModel(new AbstractListModel() {
-			String[] values = new String[] {};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		listFeed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listFeed.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		listFeed.setBorder(null);
-		listFeedScrollPane.setViewportView(listFeed);
 		
 		JLabel lblFeed = new JLabel("Tweet Feed");
 		lblFeed.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -177,5 +187,6 @@ public class UserView extends JFrame {
 		//Update following view
 		listFollowing = new JList(user.getFollowings().toArray());
 		//TODO:Update tweet feed
+		listFeed = new JList(user.getFeed().toArray());
 	}
 }
