@@ -14,6 +14,8 @@ public class User extends UserSubject implements Observer {
 	private List<String> followings;
 	private List<String> feed;
 	private String mostRecentMessage;
+	private int tweetCount;
+	private List<String> ourTweets;
 	
 	private UserView userView;
 	
@@ -53,6 +55,8 @@ public class User extends UserSubject implements Observer {
 		followers = new ArrayList<>();
 		followings = new ArrayList<>();
 		feed = new ArrayList<>();
+		ourTweets = new ArrayList<>();
+		tweetCount = 0;
 	}
 	
 	/**
@@ -96,6 +100,10 @@ public class User extends UserSubject implements Observer {
 		//Update our own feed with our own message
 		String formattedString = String.format("%s: %s", this.getID(), message);
 		feed.add(formattedString);
+		//Update our own tweet list
+		ourTweets.add(message);
+		//Increment tweet counter
+		tweetCount++;
 		//Set our most recent message
 		this.mostRecentMessage = formattedString;
 		//Notify our observers that we posted a message
@@ -180,9 +188,23 @@ public class User extends UserSubject implements Observer {
 	public String getMostRecentMessage() { return this.mostRecentMessage; }
 	
 	/**
+	 * Returns a list of this users tweets only. Used in visitor pattern when counting messages and positive messages
+	 * 
+	 * @return a list of Strings that contain our own tweets
+	 */
+	public List<String> getOwnTweets(){ return this.ourTweets; }
+	
+	/**
 	 * Returns *this* User's parent UserGroup.
 	 * 
 	 * @return the parent UserGroup
 	 */
 	public UserGroup getParentGroup() { return this.parentGroup; }
+	
+	/**
+	 * Returns the amount of tweets from the user
+	 * 
+	 * @return the number of tweets from the user
+	 */
+	public int getTweetCount() { return this.tweetCount; }
 }

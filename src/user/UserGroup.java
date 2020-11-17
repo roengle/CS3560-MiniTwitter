@@ -139,4 +139,21 @@ public class UserGroup extends TreeEntry {
 		}
 	}
 	
+	/**
+	 * Counts the amount of users in this user's entries list and users in this entries usergroups
+	 * 
+	 * @return the amount of entries in this group and all subgroups
+	 */
+	public int countUsers() {
+		int userCount = 0;
+		for(int i = 0; i < entries.size(); i++) {
+			TreeEntry element = entries.get(i);
+			if(element instanceof User) { userCount++; }
+			if(element instanceof UserGroup) {
+				userCount = userCount + ((UserGroup)element).countUsers(); 
+			}
+		}
+		return userCount;
+	}
+	
 }

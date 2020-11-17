@@ -1,6 +1,9 @@
 package user;
 
-public abstract class TreeEntry {
+import visitor.TreeEntryVisitable;
+import visitor.TreeEntryVisitor;
+
+public abstract class TreeEntry implements TreeEntryVisitable{
 	private String ID;
 	
 	public TreeEntry(String ID) {
@@ -18,5 +21,9 @@ public abstract class TreeEntry {
 	
 	public String toString() {
 		return ID;
+	}
+	
+	public void accept(TreeEntryVisitor visitor) {
+		visitor.visit(this);
 	}
 }
