@@ -12,8 +12,10 @@ public class Driver {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					//Running getInstance here guarantees that AdminController has a running instance
 					AdminController.getInstance();
-					AdminControlPanel window = new AdminControlPanel();
+					//Enter program through the admin control panel gui
+					new AdminControlPanel();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

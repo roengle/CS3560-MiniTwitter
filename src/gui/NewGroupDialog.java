@@ -1,27 +1,13 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.SwingConstants;
-import java.awt.Dialog.ModalityType;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import java.awt.GridLayout;
-import javax.swing.JSplitPane;
 import javax.swing.JLabel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
-import java.awt.Window.Type;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -80,10 +66,10 @@ public class NewGroupDialog extends JDialog {
 		txtGroupIDInput.setBounds(122, 11, 115, 20);
 		getContentPane().add(txtGroupIDInput);
 		
-		JLabel lblGroup = new JLabel("Group:");
+		JLabel lblGroup = new JLabel("Parent Group:");
 		lblGroup.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGroup.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblGroup.setBounds(59, 45, 57, 17);
+		lblGroup.setBounds(10, 45, 106, 17);
 		getContentPane().add(lblGroup);
 		
 		txtGroupInput = new JTextField();

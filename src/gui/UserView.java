@@ -122,10 +122,14 @@ public class UserView extends JFrame {
 				
 				//Get validated input ID of user to follow
 				String inputID = flwUserDialog.getID();
-				//Have the user follow the object
-				user.followUser(inputID);
+				//Dont re-follow if we are already following the user
+				if(!user.isFollowing(inputID)) {
+					//Have the user follow the object
+					user.followUser(inputID);
+					//Update the JList
+					((DefaultListModel)listFollowingModel).addElement(inputID);
+				}
 				
-				((DefaultListModel)listFollowingModel).addElement(inputID);
 			}
 		});
 		btnFollowUser.setEnabled(false);

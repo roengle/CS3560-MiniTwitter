@@ -83,6 +83,7 @@ public class User extends UserSubject implements Observer {
 	/**
 	 * Posts a tweet given a message. Additionally updates observers to update any of *our* followers feeds. The
 	 * following are the steps to do this:
+	 * 
 	 * (1) Format the string so it includes our ID.
 	 * (2) Update our own feed
 	 * (3) Set our most recent message field
@@ -102,6 +103,42 @@ public class User extends UserSubject implements Observer {
 		
 	}
 
+	/**
+	 * Acts as an observer being called by another user.
+	 */
+	public void update(UserSubject userSubject) {
+		/*
+		 * One of our observers has called us...
+		 * Remember we only care about our followings messages
+		 * and ID. Once ID is added to our followers list, it won't be used
+		 * for anything else.
+		 */
+		//Get ID of our subject
+		String id = userSubject.getID();
+		//If their ID isn't in our follower list...
+		if(!followers.contains(id)) {
+			followers.add(id);
+		}
+		//Get most recent message
+		String msg = ((User)userSubject).getMostRecentMessage();
+		//If just getting a new follower, msg will be null so don't update feed
+		if(msg != null) {
+			feed.add(msg);
+			//Update feed GUI
+			userView.updateFeed(msg);
+		}
+	}
+	
+	/**
+	 * Checks whether or not the user is following a certain ID.
+	 * 
+	 * @param ID the ID to check
+	 * @return true if following, false if not
+	 */
+	public boolean isFollowing(String ID) {
+		return followings.contains(ID);
+	}
+	
 	/**
 	 * Sets this User's parent UserGroup
 	 * 
@@ -148,31 +185,4 @@ public class User extends UserSubject implements Observer {
 	 * @return the parent UserGroup
 	 */
 	public UserGroup getParentGroup() { return this.parentGroup; }
-	
-	
-	@Override
-	public void update(UserSubject userSubject) {
-		/*
-		 * One of our observers has called us...
-		 * Remember we only care about our followings messages
-		 * and ID. Once ID is added to our followers list, it won't be used
-		 * for anything else.
-		 */
-		//Get ID of our subject
-		String id = userSubject.getID();
-		//If their ID isn't in our follower list...
-		if(!followers.contains(id)) {
-			followers.add(id);
-		}
-		//Get most recent message
-		String msg = ((User)userSubject).getMostRecentMessage();
-		//If just getting a new follower, msg will be null so don't update feed
-		if(msg != null) {
-			feed.add(msg);
-			//Update feed GUI
-			userView.updateFeed(msg);
-		}
-	}
-	
-	
 }

@@ -140,8 +140,8 @@ public class AdminControlPanel {
 					userDialog.setVisible(true);
 					
 					String inputID = userDialog.getID();
-					//Checks if cancel button was pressed or no text was entered
-					if(inputID != null) {
+					//Checks if cancel button was pressed or no text was entered. Also checks if user doesn't already exist
+					if(inputID != null && AdminController.getUserByID(inputID) == null) {
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
 						//Remove node "(empty)" if it exists
@@ -190,8 +190,8 @@ public class AdminControlPanel {
 					
 					String inputID = groupDialog.getID();
 					
-					//Checks if cancel button was pressed or no text was entered
-					if(inputID != null) {
+					//Checks if cancel button was pressed or no text was entered and if the group doesn't already exist
+					if(inputID != null && AdminController.getGroupByID(inputID) == null) {
 						//Get tree model
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 						//Set target node to insert into

@@ -10,14 +10,12 @@ public class AdminController {
 	
 	/* Static fields */
 	private static UserGroup rootUserGroup;
-	private static TreeEntry selectedEntry;
 	
 	/**
 	 * A private constructor for AdminController to obey singleton pattern
 	 */
 	private AdminController() {
-		//Initialize selected entry to null
-		selectedEntry = null;
+		rootUserGroup = new UserGroup("root");
 	}
 
 	/**
@@ -26,19 +24,7 @@ public class AdminController {
 	 * @return current or new instance of AdminController
 	 */
 	public static AdminController getInstance() {
-		if(instance == null) {
-			instance = new AdminController();
-			rootUserGroup = new UserGroup("root");
-		}
-		return instance;
-	}
-	
-	/**
-	 * Selects an entry by setting the selectedEntry field
-	 * @param entry the entry to be selected
-	 */
-	public void selectEntry(TreeEntry entry) {
-		selectedEntry = entry;
+		return instance == null ? (instance = new AdminController()) : instance;
 	}
 	
 	public void showUserTotal() {
@@ -59,14 +45,6 @@ public class AdminController {
 	
 	public static TreeEntry getRootEntry() {
 		return rootUserGroup;
-	}
-	/**
-	 * Gets the current selected TreeEntry
-	 * 
-	 * @return the selected TreeEntry
-	 */
-	public static TreeEntry getSelectedEntry() {
-		return selectedEntry;
 	}
 	
 	/**
