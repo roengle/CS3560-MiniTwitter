@@ -25,6 +25,7 @@ public class ShowUserTotalVisitor implements TreeEntryVisitor{
 	/**
 	 * Counts the amount of users in this user's entries list and users in this entries usergroups
 	 * 
+	 * @param entry the TreeEntry(in this case UserGroup) that is the root of the tree we want to search
 	 * @return the amount of entries in this group and all subgroups
 	 */
 	public int countUsers(TreeEntry entry) {

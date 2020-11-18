@@ -22,6 +22,14 @@ public class ShowMessageTotalVisitor implements TreeEntryVisitor{
 		return amountMessages;
 	}
 	
+	/**
+	 * Helper method to get the total amount of messages in a tree with entry as the root group. During its search,
+	 * if a User is found, it will increment the counter by the amount of messages that user has. If a UserGroup is found,
+	 * that group is recursively searched for more Users and UserGroups, and so on...
+	 * 
+	 * @param entry the TreeEntry(in this case a UserGroup) that is the root of the tree we want to search
+	 * @return the number of messages in the tree with entry as the root
+	 */
 	public int getTotalMessages(TreeEntry entry) {
 		List<TreeEntry> entries = ((UserGroup)entry).getEntries();
 		//Initialize counter to 0
@@ -43,5 +51,4 @@ public class ShowMessageTotalVisitor implements TreeEntryVisitor{
 		//Return total amount of messages
 		return messageCount;
 	}
-
 }

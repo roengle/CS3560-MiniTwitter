@@ -138,7 +138,7 @@ public class UserGroup extends TreeEntry {
 	}
 	
 	/**
-	 * Prints all entries in the usergroup using a depth-first search. Mainly used for debugging
+	 * Prints all entries in the UserGroup using a depth-first search. Mainly used for debugging.
 	 */
 	public void printAllEntries(int tabCount) {
 		//Loop through entries
@@ -157,5 +157,4 @@ public class UserGroup extends TreeEntry {
 			}
 		}
 	}
-	
 }//end UserGroup class

@@ -22,6 +22,15 @@ public class ShowPosMessageTotalVisitor implements TreeEntryVisitor{
 		return amountPosMessages;
 	}
 	
+	/**
+	 * Helper method to get the amount of positive messages in a tree with entry as the root. The requirements for a "positive" messages
+	 * are described in the method containsPosWord. While looping through the entries list in entry, if a user is found, each of its messages
+	 * are searched and checked if they contain positive words. If so, a counter is incremented. If a UserGroup is found, that sub-group is recursively
+	 * searched and so on...
+	 * 
+	 * @param entry the TreeEntry(in this case UserGroup) that is the root of the tree we want to search
+	 * @return the amount of positive messages in the tree where entry is the root.
+	 */
 	public int getPosMessages(TreeEntry entry) {
 		//Initialize counter
 		int posMessageCounter = 0;
@@ -48,6 +57,12 @@ public class ShowPosMessageTotalVisitor implements TreeEntryVisitor{
 		return posMessageCounter;
 	}
 	
+	/**
+	 * A helper method to determine if a String contains positive words. The positive words are below.
+	 * 
+	 * @param message the message to check
+	 * @return true if it contains positive words, false if it doesn't
+	 */
 	public boolean containsPosWord(String message) {
 		if(message.contains("nice")) { return true; }
 		if(message.contains("great")) { return true; }

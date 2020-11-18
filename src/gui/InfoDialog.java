@@ -66,6 +66,11 @@ public class InfoDialog extends JDialog {
 		getContentPane().add(mainText);
 	}
 	
+	/**
+	 * Create's an info dialog that shows specific text
+	 * 
+	 * @param text the text we want to show
+	 */
 	public InfoDialog(String text) {
 		this();
 		setMainText(text);
@@ -77,7 +82,5 @@ public class InfoDialog extends JDialog {
 	 * 
 	 * @param text the text to set the text box to
 	 */
-	public void setMainText(String text) {
-		mainText.setText(text);
-	}
+	public void setMainText(String text) { mainText.setText(text); }
 }

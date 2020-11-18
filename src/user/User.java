@@ -19,8 +19,6 @@ public class User extends UserSubject implements Observer {
 	
 	private UserView userView;
 	
-	
-	
 	/* List<Observer> inherited from UserSubject! */
 	
 	/*
@@ -36,22 +34,39 @@ public class User extends UserSubject implements Observer {
 	 */
 	public User(String ID) {
 		super(ID);
-		initializeLists();
+		initializeFields();
 	}
 	
+	/**
+	 * Instantiates a User object given an ID of the user and the ID of the already-existing
+	 * parent UserGroup
+	 * 
+	 * @param ID the ID of the User to be constructed
+	 * @param parentID the ID of the pre-existing parent UserGroup to add this User to
+	 */
 	public User(String ID, String parentID) {
 		super(ID);
 		this.parentGroup = AdminController.getGroupByID(parentID);
-		initializeLists();
+		initializeFields();
 	}
 	
+	/**
+	 * Instantiates a User object given an ID of the User and a reference to the 
+	 * pre-existing parent UserGroup.
+	 * 
+	 * @param ID the ID of the user to be constructed
+	 * @param parentGroup the reference to the parent UserGroup object to add this user to.
+	 */
 	public User(String ID, UserGroup parentGroup) {
 		super(ID);
 		this.parentGroup = parentGroup;
-		initializeLists();
+		initializeFields();
 	}
 	
-	public void initializeLists() {
+	/**
+	 * Initializes all the necessary fields in User
+	 */
+	public void initializeFields() {
 		followers = new ArrayList<>();
 		followings = new ArrayList<>();
 		feed = new ArrayList<>();
@@ -143,18 +158,14 @@ public class User extends UserSubject implements Observer {
 	 * @param ID the ID to check
 	 * @return true if following, false if not
 	 */
-	public boolean isFollowing(String ID) {
-		return followings.contains(ID);
-	}
+	public boolean isFollowing(String ID) { return followings.contains(ID); }
 	
 	/**
 	 * Sets this User's parent UserGroup
 	 * 
 	 * @param parent the UserGroup that is the parent
 	 */
-	public void setParent(UserGroup parent) {
-		this.parentGroup = parent;
-	}
+	public void setParent(UserGroup parent) { this.parentGroup = parent; }
 	
 	/**
 	 * Sets the corresponding user view to allow for this User's update method to 
@@ -162,9 +173,7 @@ public class User extends UserSubject implements Observer {
 	 * 
 	 * @param view the UserView object
 	 */
-	public void setUserView(UserView view) {
-		this.userView = view;
-	}
+	public void setUserView(UserView view) { this.userView = view; }
 	
 	/**
 	 * Gets the User's feed list

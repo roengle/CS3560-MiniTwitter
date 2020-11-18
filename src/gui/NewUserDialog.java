@@ -34,7 +34,6 @@ public class NewUserDialog extends JDialog {
 	public static void main(String[] args) {
 		try {
 			NewUserDialog dialog = new NewUserDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -48,6 +47,7 @@ public class NewUserDialog extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				//"X" button clicked. Invalidate input so a new user isn't added
 				txtID = null;
 			}
 		});
@@ -84,6 +84,7 @@ public class NewUserDialog extends JDialog {
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Cancel button clicked. Invalide ID so a new user isn't created.
 				txtID = null;
 				//Cancel button closes dialog and discards data.
 				dispose();
@@ -95,6 +96,7 @@ public class NewUserDialog extends JDialog {
 			btnOk = new JButton("Ok");
 			btnOk.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					//Ok button clicked. Check if ID field is empty. If so, invalidate it so a new user isn't created
 					if(txtID.getText() == "") { txtID = null; }
 					dispose();
 				}
@@ -126,12 +128,20 @@ public class NewUserDialog extends JDialog {
 		getContentPane().add(txtrtoChangeGroup);
 	}
 	
+	/**
+	 * Set's the selected group to display in the second text box
+	 * 
+	 * @param group the ID of the group we are adding this user to
+	 */
 	public void setSelectedGroup(String group) {
 		this.selectedGroup = group;
 		txtGroup.setText(this.selectedGroup);
 	}
 	
-	public String getID() {
-		return this.txtID != null ? this.txtID.getText() : null;
-	}
+	/**
+	 * Gets the ID that we prompted the user for.
+	 * 
+	 * @return the ID we prompted for
+	 */
+	public String getID() { return this.txtID != null ? this.txtID.getText() : null; }
 }

@@ -6,9 +6,12 @@ import visitor.TreeEntryVisitor;
 public abstract class TreeEntry implements TreeEntryVisitable{
 	private String ID;
 	
-	public TreeEntry(String ID) {
-		this.ID = ID;
-	}
+	/**
+	 * Constructs a TreeEntry object given an ID.
+	 * 
+	 * @param ID the ID of the TreeEntry
+	 */
+	public TreeEntry(String ID) { this.ID = ID; }
 	
 	/**
 	 * Returns a string copy of the tree entry ID
@@ -22,14 +25,10 @@ public abstract class TreeEntry implements TreeEntryVisitable{
 	/**
 	 * Gets the ID of the TreeEntry
 	 */
-	public String toString() {
-		return ID;
-	}
+	public String toString() { return ID; }
 	
 	/**
 	 * Accepts a TreeEntryVisitor, which sends *this* to the visitor's visit method.
 	 */
-	public void accept(TreeEntryVisitor visitor) {
-		visitor.visit(this);
-	}
+	public void accept(TreeEntryVisitor visitor) { visitor.visit(this); }
 }

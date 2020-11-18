@@ -23,18 +23,14 @@ public abstract class UserSubject extends TreeEntry{
 	 * 
 	 * @param observer the observer to add
 	 */
-	public void attach(Observer observer) {
-		observers.add(observer);
-	}
+	public void attach(Observer observer) { observers.add(observer); }
 	
 	/**
 	 * Remove an observer from *this* Usersubject's observers list
 	 * 
 	 * @param observer the observer to remove
 	 */
-	public void detatch(Observer observer) {
-		observers.remove(observer);
-	}
+	public void detatch(Observer observer) { observers.remove(observer); }
 	
 	/**
 	 * Notifies all observers that are attached to our observers list.
@@ -50,7 +46,5 @@ public abstract class UserSubject extends TreeEntry{
 	 * 
 	 * @param user the observer(User) that we want to notify
 	 */
-	public void notifyObserver(User user) {
-		user.update(this);
-	}
+	public void notifyObserver(User user) { user.update(this); }
 }

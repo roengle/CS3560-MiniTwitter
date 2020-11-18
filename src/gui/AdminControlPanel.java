@@ -286,7 +286,6 @@ public class AdminControlPanel {
 				String messageAmt = String.format("There are %d total messages.", amtMessageTotal);
 				InfoDialog infoDialog = new InfoDialog(messageAmt);
 				infoDialog.setTitle("Total Messages");
-				
 				infoDialog.setVisible(true);
 			}
 		});
@@ -307,16 +306,19 @@ public class AdminControlPanel {
 				int amtPosMessages = AdminController.getVisitorOutput();
 				//Calculate percentage of positive messages
 				double posMessagePercent = 0.0;
+				//If there are messages...
 				if(amtMessageTotal != 0) {
 					posMessagePercent = ((amtPosMessages + 0.0)/(amtMessageTotal + 0.0)) * 100;
-				}else {
+				}
+				//If there aren't any messages yet
+				else {
 					posMessagePercent = 0;
 				}
 				//Format a message to show this
 				String formattedText = String.format("Out of all messages, %.2f percent are positive messages.", posMessagePercent);
+				//New dialog to show information
 				InfoDialog infoDialog = new InfoDialog(formattedText);
 				infoDialog.setTitle("Positive Message Percent");
-				
 				infoDialog.setVisible(true);
 			}
 		});
@@ -334,9 +336,9 @@ public class AdminControlPanel {
 				int amtUserTotal = AdminController.getVisitorOutput();
 				//Format string to contain amount of users.
 				String userAmt = String.format("There are %d total users.", amtUserTotal);
+				//New InfoDialog
 				InfoDialog infoDialog = new InfoDialog(userAmt);
 				infoDialog.setTitle("Total Users");
-				
 				infoDialog.setVisible(true);
 			}
 		});
@@ -355,7 +357,6 @@ public class AdminControlPanel {
 				String groupAmt = String.format("There are %d total groups", amtGroupTotal);
 				InfoDialog infoDialog = new InfoDialog(groupAmt);
 				infoDialog.setTitle("Total Groups");
-				
 				infoDialog.setVisible(true);
 			}
 		});
@@ -375,8 +376,6 @@ public class AdminControlPanel {
 		JLabel lblNewLabel_1 = new JLabel("Group:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_1.setBounds(168, 51, 47, 27);
-		mainAppWindow.getContentPane().add(lblNewLabel_1);
-		
+		mainAppWindow.getContentPane().add(lblNewLabel_1);	
 	}
-	
-}
+}//end AdminControlPanel class

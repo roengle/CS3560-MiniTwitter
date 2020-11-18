@@ -28,7 +28,6 @@ public class NewGroupDialog extends JDialog {
 	public static void main(String[] args) {
 		try {
 			NewGroupDialog dialog = new NewGroupDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,6 +45,7 @@ public class NewGroupDialog extends JDialog {
 				txtGroupIDInput = null;
 			}
 		});
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setType(Type.POPUP);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setModal(true);
@@ -92,6 +92,7 @@ public class NewGroupDialog extends JDialog {
 		btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Ok button clicked. Check if text is empty. If so, set to null so new group isn't created.
 				if(txtGroupIDInput.getText() == "") { txtGroupIDInput = null; }
 				dispose();
 			}
@@ -102,6 +103,7 @@ public class NewGroupDialog extends JDialog {
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Cancel button clicked. Invalidate the text input so a new group isn't created.
 				txtGroupIDInput = null;
 				dispose();
 			}
@@ -113,12 +115,20 @@ public class NewGroupDialog extends JDialog {
 		getRootPane().setDefaultButton(btnOk);
 	}
 	
+	/**
+	 * Set's the selected group to display in the second text box.
+	 * 
+	 * @param group the ID of the group we are adding this group to
+	 */
 	public void setSelectedGroup(String group) {
 		this.selectedGroup = group;
 		txtGroupInput.setText(this.selectedGroup);
 	}
 	
-	public String getID() {
-		return this.txtGroupIDInput != null ? this.txtGroupIDInput.getText() : null;
-	}
+	/**
+	 * Gets the ID that we prompted the user for.
+	 * 
+	 * @return the ID that we prompted for
+	 */
+	public String getID() { return this.txtGroupIDInput != null ? this.txtGroupIDInput.getText() : null; }
 }

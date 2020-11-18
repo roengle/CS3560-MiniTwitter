@@ -14,7 +14,7 @@ public class Driver {
 				try {
 					//Running getInstance here guarantees that AdminController has a running instance
 					AdminController.getInstance();
-					//Enter program through the admin control panel gui
+					//Enter program through the admin control panel GUI
 					new AdminControlPanel();
 				} catch (Exception e) {
 					e.printStackTrace();

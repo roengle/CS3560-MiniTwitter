@@ -216,9 +216,9 @@ public class UserView extends JFrame {
 		txtIDInput.setText(user.getID());
 		//Update following view
 		listFollowing = new JList(user.getFollowings().toArray());
-		//TODO:Update tweet feed
+		//Update tweet feed
 		listFeed = new JList(user.getFeed().toArray());
-		
+		//Set the User obbject's user view to us
 		user.setUserView(this);
 	}
 	
@@ -228,7 +228,5 @@ public class UserView extends JFrame {
 	 * @param msg the message to update the feed with
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void updateFeed(String msg) {
-		((DefaultListModel)listFeedModel).addElement(msg);
-	}
+	public void updateFeed(String msg) { ((DefaultListModel)listFeedModel).addElement(msg); }
 }

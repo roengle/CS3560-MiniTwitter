@@ -28,7 +28,6 @@ public class NewTweetDialog extends JDialog {
 	public static void main(String[] args) {
 		try {
 			NewTweetDialog dialog = new NewTweetDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,6 +41,7 @@ public class NewTweetDialog extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				//"X" button clicked. Invalidate input so a new tweet isn't posted
 				txtMessage = null;
 			}
 		});
@@ -71,6 +71,7 @@ public class NewTweetDialog extends JDialog {
 			btnPost = new JButton("Post Tweet");
 			btnPost.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					//Post button clicked. Check if message is empty. If so, invalidate it so a new message isn't posted
 					if(txtMessage.getText().equals("")) { txtMessage = null; }
 					dispose();
 				}
@@ -82,6 +83,7 @@ public class NewTweetDialog extends JDialog {
 			btnCancel = new JButton("Cancel");
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					//Cancel button clicked. Invalide message so a new tweet isn't posted
 					txtMessage = null;
 					dispose();
 				}
@@ -93,8 +95,10 @@ public class NewTweetDialog extends JDialog {
 		getRootPane().setDefaultButton(btnPost);
 	}
 	
-	
-	public String getMessage() {
-		return txtMessage.getText();
-	}
+	/**
+	 * Get's the message that that we prompted the user for.
+	 * 
+	 * @return the message we prompted for
+	 */
+	public String getMessage() { return txtMessage.getText(); }
 }

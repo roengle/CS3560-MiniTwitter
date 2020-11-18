@@ -31,7 +31,6 @@ public class FollowUserDialog extends JDialog {
 	public static void main(String[] args) {
 		try {
 			FollowUserDialog dialog = new FollowUserDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,17 +89,16 @@ public class FollowUserDialog extends JDialog {
 			/*Same code in both methods since we want to check when text is changed*/
 			public void insertUpdate(DocumentEvent e) {
 				//Enable the ok button if a user with the given ID actually exists
-				btnOk.setEnabled(AdminController.getUserByID(inputID.getText()) != null && !inputID.getText().equals(ourID) ? true : false);
+				btnOk.setEnabled(AdminController.getUserByID(inputID.getText()) != null && !inputID.getText().equals(ourID));
 			}
 
 			public void removeUpdate(DocumentEvent e) {
 				//Enable the ok button if a user with the given ID actually exists
-				btnOk.setEnabled(AdminController.getUserByID(inputID.getText()) != null && !inputID.getText().equals(ourID) ? true : false);
+				btnOk.setEnabled(AdminController.getUserByID(inputID.getText()) != null && !inputID.getText().equals(ourID));
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {}
-			
 		});
 		getContentPane().add(inputID);
 		
