@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserGroup extends TreeEntry {
+	/* Instance fields */
 	private List<TreeEntry> entries;
 	private UserGroup parent;
 		
@@ -43,9 +44,12 @@ public class UserGroup extends TreeEntry {
 		entries.add(newUser);
 	}
 	
-	public void addUser(User user) {
-		entries.add(user);
-	}
+	/**
+	 * Adds a User to *this* UserGroup's entries list given the User object.
+	 * 
+	 * @param user the User object to add
+	 */
+	public void addUser(User user) { entries.add(user); }
 	
 	/**
 	 * Adds a UserGroup to *this* UserGroup's entries list.
@@ -57,17 +61,25 @@ public class UserGroup extends TreeEntry {
 		entries.add(newGroup);
 	}
 	
-	public void addUserGroup(UserGroup newGroup) {
-		entries.add(newGroup);
-	}
+	/**
+	 * Adds a new UserGroup given a UserGroup object
+	 * 
+	 * @param newGroup the UserGroup object to add
+	 */
+	public void addUserGroup(UserGroup newGroup) { entries.add(newGroup); }
+	
+	/**
+	 * Gets the UserGroup's entries
+	 * 
+	 * @return a list of this UserGroup's entries
+	 */
+	public List<TreeEntry> getEntries(){ return this.entries; }
 	
 	/**
 	 * Gets *this* UserGroup's parent UserGroup
 	 * @return the parent UserGroup
 	 */
-	public UserGroup getParent() {
-		return this.parent;
-	}
+	public UserGroup getParent() { return this.parent; }
 	
 	/**
 	 * Helper method to find a User (in this UserGroup's context) through a sequential search through entries.
@@ -84,14 +96,14 @@ public class UserGroup extends TreeEntry {
 			if(entry instanceof User && entry.getID().equals(ID)) {
 				return (User)entry;
 			}
-			//TODO: test if this fix works
+			//UserGroup detected. Recursively search UserGroup
 			if(entry instanceof UserGroup) {
 				if(((UserGroup) entry).findUserByID(ID) != null) {
 					return ((UserGroup) entry).findUserByID(ID);
 				}
 			}
 		}
-		//TODO: recursively search subdirectories AND FIX IT
+		//Return null if not found
 		return null;
 	}
 	
@@ -114,12 +126,14 @@ public class UserGroup extends TreeEntry {
 			if(entry instanceof UserGroup && entry.getID().equals(ID)) {
 				return (UserGroup)entry;
 			}
+			//UserGroup detected but not what we are searching for. Recursively search group
 			else if(entry instanceof UserGroup) {
 				if(((UserGroup) entry).findGroupByID(ID) != null) {
 					return ((UserGroup) entry).findGroupByID(ID);
 				}
 			}
 		}
+		//Return null if not found
 		return null;
 	}
 	
@@ -127,33 +141,21 @@ public class UserGroup extends TreeEntry {
 	 * Prints all entries in the usergroup using a depth-first search. Mainly used for debugging
 	 */
 	public void printAllEntries(int tabCount) {
+		//Loop through entries
 		for(int i = 0; i < entries.size(); i++){
+			//Get element
 			TreeEntry element = entries.get(i);
+			//Print tabs based on if element is a sub-element of another group
 			for(int j = 0; j < tabCount; j++) {
 				System.out.print("\t");
 			}
+			//Print the ID and the type 
 			System.out.println(element.getID() + " - " + element.getClass().getName());
+			//If there is a group, recursively print the entries in that group
 			if(element instanceof UserGroup) {
 				((UserGroup) element).printAllEntries(tabCount + 1);
 			}
 		}
 	}
 	
-	/**
-	 * Counts the amount of users in this user's entries list and users in this entries usergroups
-	 * 
-	 * @return the amount of entries in this group and all subgroups
-	 */
-	public int countUsers() {
-		int userCount = 0;
-		for(int i = 0; i < entries.size(); i++) {
-			TreeEntry element = entries.get(i);
-			if(element instanceof User) { userCount++; }
-			if(element instanceof UserGroup) {
-				userCount = userCount + ((UserGroup)element).countUsers(); 
-			}
-		}
-		return userCount;
-	}
-	
-}
+}//end UserGroup class

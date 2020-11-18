@@ -42,8 +42,8 @@ public class NewGroupDialog extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				//"X" button is clicked, set group id input to null so a new group isn't added
 				txtGroupIDInput = null;
-				dispose();
 			}
 		});
 		setType(Type.POPUP);

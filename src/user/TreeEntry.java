@@ -19,10 +19,16 @@ public abstract class TreeEntry implements TreeEntryVisitable{
 		return String.copyValueOf(ID.toCharArray());
 	}
 	
+	/**
+	 * Gets the ID of the TreeEntry
+	 */
 	public String toString() {
 		return ID;
 	}
 	
+	/**
+	 * Accepts a TreeEntryVisitor, which sends *this* to the visitor's visit method.
+	 */
 	public void accept(TreeEntryVisitor visitor) {
 		visitor.visit(this);
 	}

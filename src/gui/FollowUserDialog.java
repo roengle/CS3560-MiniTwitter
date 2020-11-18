@@ -45,6 +45,7 @@ public class FollowUserDialog extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				//"X" button clicked, set input to null so a new user isn't followed
 				inputID = null;
 			}
 		});
@@ -60,7 +61,9 @@ public class FollowUserDialog extends JDialog {
 		btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//If no text is entered, set our input id to null so a user isn't followed
 				if(inputID.getText() == "") { inputID = null; }
+				//Dispose and close window
 				dispose();
 			}
 		});
@@ -71,6 +74,7 @@ public class FollowUserDialog extends JDialog {
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Cancel button was pressed, so set input id to null so a user isn't followed
 				inputID = null;
 				//Cancel button closes dialog and discards data.
 				dispose();
@@ -83,12 +87,14 @@ public class FollowUserDialog extends JDialog {
 		inputID.setColumns(10);
 		inputID.setBounds(109, 25, 119, 28);
 		inputID.getDocument().addDocumentListener(new DocumentListener() {
-
+			/*Same code in both methods since we want to check when text is changed*/
 			public void insertUpdate(DocumentEvent e) {
+				//Enable the ok button if a user with the given ID actually exists
 				btnOk.setEnabled(AdminController.getUserByID(inputID.getText()) != null && !inputID.getText().equals(ourID) ? true : false);
 			}
 
 			public void removeUpdate(DocumentEvent e) {
+				//Enable the ok button if a user with the given ID actually exists
 				btnOk.setEnabled(AdminController.getUserByID(inputID.getText()) != null && !inputID.getText().equals(ourID) ? true : false);
 			}
 
@@ -115,10 +121,21 @@ public class FollowUserDialog extends JDialog {
 		getContentPane().add(txtrPleaseInputThe);
 	}
 	
+	/**
+	 * Gets the ID of the user to follow
+	 * 
+	 * @return the ID of the user to follow
+	 */
 	public String getID() {
 		return this.inputID != null ? this.inputID.getText() : null;
 	}
 	
+	/**
+	 * Sets the ID of the user that is going to be following another user using this dialog.
+	 * It is important to know *our* ID since we don't want to follow ourself.
+	 * 
+	 * @param ourID the ID of the user who will be following another
+	 */
 	public void setOurID(String ourID) {
 		this.ourID = ourID;
 	}

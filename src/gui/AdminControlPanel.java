@@ -22,6 +22,10 @@ import admin.AdminController;
 import user.TreeEntry;
 import user.User;
 import user.UserGroup;
+import visitor.ShowGroupTotalVisitor;
+import visitor.ShowMessageTotalVisitor;
+import visitor.ShowPosMessageTotalVisitor;
+import visitor.ShowUserTotalVisitor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.event.TreeSelectionListener;
@@ -80,25 +84,38 @@ public class AdminControlPanel {
 				btnAddUser.setEnabled(true);
 				btnAddGroup.setEnabled(true);
 				
+				//Get the tree node that is selected
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                         tree.getLastSelectedPathComponent();
+				//Set our selected node
 				selectedNode = node;
 				try {
+					//Get the node's name
 					String nodeName = node.getUserObject().toString() == null ? "" : node.getUserObject().toString();
 					//If user
 					if(node.isLeaf()){
+						//If the node isn't the (empty) placeholder...
 						if(!nodeName.equals("(empty)")) {
 							btnOpenUserView.setEnabled(true);
 						}else {
 							btnOpenUserView.setEnabled(false);
 						}
+						//Get the node's parent
 						DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+						//Get the parent's name
 						String nodeParentName = (String)parent.getUserObject().toString();
+						//Set the user ID field to the nodes name
 						txtUserInput.setText(nodeName);
+						//Sets the group's ID field to the parent's name
 						txtGroupInput.setText(nodeParentName);
-					}else {
+					}
+					//If UserGroup
+					else {
+						//Disable open user view button
 						btnOpenUserView.setEnabled(false);
+						//Set the user text field to empty;
 						txtUserInput.setText(null);
+						//Set the text of the group field to the name of the node
 						txtGroupInput.setText(nodeName);
 					}
 				}catch(Exception ex) {
@@ -132,6 +149,7 @@ public class AdminControlPanel {
 		btnAddUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//New User Dialogg
 					NewUserDialog userDialog = new NewUserDialog();
 					userDialog.setSelectedGroup(txtGroupInput.getText());
 					
@@ -139,10 +157,13 @@ public class AdminControlPanel {
 					userDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					userDialog.setVisible(true);
 					
+					//Get the input ID
 					String inputID = userDialog.getID();
 					//Checks if cancel button was pressed or no text was entered. Also checks if user doesn't already exist
 					if(inputID != null && AdminController.getUserByID(inputID) == null) {
+						//Get the model for the tree
 						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						//Figure out which node we need to insert a new user into
 						DefaultMutableTreeNode insertionNode = selectedNode.isLeaf() ? (DefaultMutableTreeNode)selectedNode.getParent() : selectedNode;
 						//Remove node "(empty)" if it exists
 						if(insertionNode.getChildCount() == 1) {
@@ -153,11 +174,12 @@ public class AdminControlPanel {
 						}
 						//Insert node
 						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
-					
+						//Get the parent UserGroup
 						UserGroup parentGroup = AdminController.getGroupByID(insertionNode.getUserObject().toString());
+						//Make a new user based on the input id and parent group
 						User newUser = new User(inputID, parentGroup);
+						//Add the user to the parent
 						parentGroup.addUser(newUser);
-						
 						//DEBUGGING
 						AdminController.printAllEntries();
 					}
@@ -181,6 +203,7 @@ public class AdminControlPanel {
 		btnAddGroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//New group dialog
 					NewGroupDialog groupDialog = new NewGroupDialog();
 					groupDialog.setSelectedGroup(txtGroupInput.getText());
 					
@@ -188,6 +211,7 @@ public class AdminControlPanel {
 					groupDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					groupDialog.setVisible(true);
 					
+					//Get group input ID
 					String inputID = groupDialog.getID();
 					
 					//Checks if cancel button was pressed or no text was entered and if the group doesn't already exist
@@ -207,21 +231,21 @@ public class AdminControlPanel {
 						model.insertNodeInto(new DefaultMutableTreeNode(inputID), insertionNode, insertionNode.getChildCount());
 						//Switch insertion node to the most recent node we just added
 						DefaultMutableTreeNode insertionNodeNext = insertionNode.getLastLeaf();
-						//Insert empty node as a placeholder
+						//Insert empty node as a placeholder so it appears as a folder in the tree view
 						DefaultMutableTreeNode emptyCopy = new DefaultMutableTreeNode(new User("(empty)"));
 						model.insertNodeInto(emptyCopy, insertionNodeNext, insertionNodeNext.getChildCount());
 						
-						//System.out.println("Attempting to add " + inputID + " into group " + txtGroupInput.getText());
+						//Get the parent group
 						UserGroup parentGroup = AdminController.getGroupByID(insertionNode.getUserObject().toString());
-						//System.out.println("parent group: " + parentGroup.getID() + " - " + parentGroup.getClass().getName());
+						//Create a new group based on input ID and parent group
 						UserGroup newGroup = new UserGroup(inputID, parentGroup);
+						//Add the new group into the parent group
 						parentGroup.addUserGroup(newGroup);
 					}
 					
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
-				
 				// DEBUGGING
 				AdminController.printAllEntries();
 			}
@@ -237,6 +261,7 @@ public class AdminControlPanel {
 				String userID = selectedNode.getUserObject().toString();
 				User userToBringUp = AdminController.getUserByID(userID);
 				
+				//New UserView object
 				UserView newView = new UserView();
 				
 				newView.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -251,22 +276,89 @@ public class AdminControlPanel {
 		mainAppWindow.getContentPane().add(btnOpenUserView);
 		
 		JButton btnShowTotalMessages = new JButton("Show Total Messages");
+		btnShowTotalMessages.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Have the root entry visit accept the show user total visitor method
+				AdminController.getRootEntry().accept(new ShowMessageTotalVisitor());
+				//Value is in AdminController.visitorOutput
+				int amtMessageTotal = AdminController.getVisitorOutput();
+				//Format string to contain amount of users.
+				String messageAmt = String.format("There are %d total messages.", amtMessageTotal);
+				InfoDialog infoDialog = new InfoDialog(messageAmt);
+				infoDialog.setTitle("Total Messages");
+				
+				infoDialog.setVisible(true);
+			}
+		});
 		btnShowTotalMessages.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnShowTotalMessages.setBounds(175, 195, 248, 29);
 		mainAppWindow.getContentPane().add(btnShowTotalMessages);
 		
 		JButton btnShowPositive = new JButton("Show Positive %");
+		btnShowPositive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Have the root entry visit accept the show user total visitor method
+				AdminController.getRootEntry().accept(new ShowMessageTotalVisitor());
+				//Value is in AdminController.visitorOutput
+				int amtMessageTotal = AdminController.getVisitorOutput();
+				//Have the root entry visitor accept the show user pos message total visitor method
+				AdminController.getRootEntry().accept(new ShowPosMessageTotalVisitor());
+				//Value is in AdminController.visitorOutput
+				int amtPosMessages = AdminController.getVisitorOutput();
+				//Calculate percentage of positive messages
+				double posMessagePercent = 0.0;
+				if(amtMessageTotal != 0) {
+					posMessagePercent = ((amtPosMessages + 0.0)/(amtMessageTotal + 0.0)) * 100;
+				}else {
+					posMessagePercent = 0;
+				}
+				//Format a message to show this
+				String formattedText = String.format("Out of all messages, %.2f percent are positive messages.", posMessagePercent);
+				InfoDialog infoDialog = new InfoDialog(formattedText);
+				infoDialog.setTitle("Positive Message Percent");
+				
+				infoDialog.setVisible(true);
+			}
+		});
 		btnShowPositive.setToolTipText("Shows the percentage of total messages that are considered \"positive.\"");
 		btnShowPositive.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnShowPositive.setBounds(175, 224, 248, 29);
 		mainAppWindow.getContentPane().add(btnShowPositive);
 		
 		JButton btnShowUserTotal = new JButton("Show User Total");
+		btnShowUserTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Have the root entry visit accept the show user total visitor method
+				AdminController.getRootEntry().accept(new ShowUserTotalVisitor());
+				//Value is in AdminController.visitorOutput
+				int amtUserTotal = AdminController.getVisitorOutput();
+				//Format string to contain amount of users.
+				String userAmt = String.format("There are %d total users.", amtUserTotal);
+				InfoDialog infoDialog = new InfoDialog(userAmt);
+				infoDialog.setTitle("Total Users");
+				
+				infoDialog.setVisible(true);
+			}
+		});
 		btnShowUserTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnShowUserTotal.setBounds(175, 137, 248, 29);
 		mainAppWindow.getContentPane().add(btnShowUserTotal);
 		
 		JButton btnShowGroupTotal = new JButton("Show Group Total");
+		btnShowGroupTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Have the root entry visitor accept the show group total visitor method
+				AdminController.getRootEntry().accept(new ShowGroupTotalVisitor());
+				//Value in AdminController.visitorOutput
+				int amtGroupTotal = AdminController.getVisitorOutput();
+				//Format string to contain amount of groups
+				String groupAmt = String.format("There are %d total groups", amtGroupTotal);
+				InfoDialog infoDialog = new InfoDialog(groupAmt);
+				infoDialog.setTitle("Total Groups");
+				
+				infoDialog.setVisible(true);
+			}
+		});
 		btnShowGroupTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnShowGroupTotal.setBounds(175, 166, 248, 29);
 		mainAppWindow.getContentPane().add(btnShowGroupTotal);
