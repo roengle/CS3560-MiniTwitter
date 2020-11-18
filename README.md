@@ -1,10 +1,13 @@
 # CS3560-MiniTwitter
+
 ### Language Used: Java
 
 ##Video
+
 Watch the video describing the program [here](https://www.youtube.com/watch?v=G8Gog94gs2A&feature=youtu.be)!
 
 ## Description
+
 A class project for CS3560.01 at Cal Poly Pomona that involves creating a "Mini Twitter." The assignment focuses on 
 implementing four design patterns:
 
@@ -20,6 +23,7 @@ the respective User's panel. In this panel, it shows who they are following, the
 "Tweet" a message as well as following a new user.
 
 ## Pattern Usage
+
 ### Composite
 
 The composite pattern is used for both the Users and UserGroups, as they are able to be put into the same hierarchy through this pattern.
@@ -50,8 +54,15 @@ The visitor pattern is used to add functionality to the UserGroup. There are fou
 "wonderful," and "happy."
 
 ## Persistence
+
 No persistence is used in this program. Since the main goal is implementing certain design patterns, we aren't worried about storing
 any data.
+
+## Demo Pictures
+
+![AdminControlPanel](https://github.com/roengle/CS3560-MiniTwitter/blob/master/assets/demo/1.png)
+
+![UserView](https://github.com/roengle/CS3560-MiniTwitter/blob/master/assets/demo/2.PNG)
 
 ### Built With
 
