@@ -62,7 +62,11 @@ any data.
 
 ![AdminControlPanel](https://github.com/roengle/CS3560-MiniTwitter/blob/master/assets/demo/1.png)
 
+Admin Control Panel View
+
 ![UserView](https://github.com/roengle/CS3560-MiniTwitter/blob/master/assets/demo/2.PNG)
+
+User View
 
 ### Built With
 
