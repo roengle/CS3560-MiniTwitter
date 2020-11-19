@@ -2,7 +2,7 @@
 
 ### Language Used: Java
 
-##Video
+## Video
 
 Watch the video describing the program [here](https://www.youtube.com/watch?v=G8Gog94gs2A&feature=youtu.be)!
 
