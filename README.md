@@ -9,7 +9,7 @@ The following are the features added for the A3 assignment:
 	* There can be no duplicate IDs. This is for program functionality.
 	* Button to check if all IDs are valid.
 		* Implemented using the Visitor pattern.
-	* User and UserGroup have a creationTime attribute now, and UserView reflect this for the associate User.
+	* User and UserGroup have a creationTime attribute now, and UserView reflect this for the associated User.
 	* User has a lastUpdatedTime attribute now, which is reflected in the associated UserView.
 		* For Users that are just created, lastUpdatedTime will be equal to creationTime until updated.
 	* Button to find the last updated user.
