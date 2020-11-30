@@ -59,10 +59,12 @@ instance of AdminController to be made, which in turn allows AdminControlPanel t
 
 The visitor pattern is used to add functionality to the UserGroup. There are four elements:
 
-	* Show User Total
+	* Check if All IDs are Valid (A3)
 	* Show Group Total
+	* Show Last Updated User
 	* Show Message Total
 	* Show Positive Message Percentage
+	* Show User Total
 	
 "Positive Messages" refer to there being positive words in that message. This feature was really open so I added some words such as "nice," "great,"
 "wonderful," and "happy."
