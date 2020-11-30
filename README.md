@@ -2,6 +2,20 @@
 
 ### Language Used: Java
 
+## A3 Update
+
+The following are the features added for the A3 assignment:
+
+	* There can be no duplicate IDs. This is for program functionality.
+	* Button to check if all IDs are valid.
+		* Implemented using the Visitor pattern.
+	* User and UserGroup have a creationTime attribute now, and UserView reflect this for the associate User.
+	* User has a lastUpdatedTime attribute now, which is reflected in the associated UserView.
+		* For Users that are just created, lastUpdatedTime will be equal to creationTime until updated.
+	* Button to find the last updated user.
+		* Implemented using the Visitor pattern.
+	
+	
 ## Video
 
 Watch the video describing the program [here](https://www.youtube.com/watch?v=G8Gog94gs2A&feature=youtu.be)!
@@ -60,7 +74,7 @@ any data.
 
 ## Demo Pictures
 
-![AdminControlPanel](https://github.com/roengle/CS3560-MiniTwitter/blob/master/assets/demo/1.png)
+![AdminControlPanel](https://github.com/roengle/CS3560-MiniTwitter/blob/master/assets/demo/1.PNG)
 
 Admin Control Panel View
 

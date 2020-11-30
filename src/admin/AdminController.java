@@ -10,7 +10,7 @@ public class AdminController {
 	
 	/* Static fields */
 	private static UserGroup rootUserGroup;
-	private static int visitorOutput;
+	private static Object visitorOutput;
 	
 	/**
 	 * A private constructor for AdminController to obey singleton pattern
@@ -52,7 +52,7 @@ public class AdminController {
 	 * 
 	 * @return the value in visitorOutput
 	 */
-	public static int getVisitorOutput() { return visitorOutput; }
+	public static Object getVisitorOutput() { return visitorOutput; }
 	
 	/**
 	 * Sets the AdminController's root group
@@ -65,7 +65,7 @@ public class AdminController {
 	 * 
 	 * @param output the visitor output to set
 	 */
-	public static void setVisitorOutput(int output) { visitorOutput = output; }
+	public static void setVisitorOutput(Object output) { visitorOutput = output; }
 	/**
 	 * Prints all entries in the working tree
 	 */

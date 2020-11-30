@@ -22,7 +22,9 @@ import admin.AdminController;
 import user.TreeEntry;
 import user.User;
 import user.UserGroup;
+import visitor.CheckValidIDVisitor;
 import visitor.ShowGroupTotalVisitor;
+import visitor.ShowLastUpdatedUserVisitor;
 import visitor.ShowMessageTotalVisitor;
 import visitor.ShowPosMessageTotalVisitor;
 import visitor.ShowUserTotalVisitor;
@@ -73,7 +75,7 @@ public class AdminControlPanel {
 		mainAppWindow.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 156, 242);
+		scrollPane.setBounds(10, 11, 156, 213);
 		mainAppWindow.getContentPane().add(scrollPane);
 		
 		
@@ -262,10 +264,9 @@ public class AdminControlPanel {
 				User userToBringUp = AdminController.getUserByID(userID);
 				
 				//New UserView object
-				UserView newView = new UserView();
+				UserView newView = new UserView(userToBringUp);
 				
 				newView.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				newView.setUser(userToBringUp);
 				newView.setVisible(true);
 			}
 		});
@@ -281,7 +282,7 @@ public class AdminControlPanel {
 				//Have the root entry visit accept the show user total visitor method
 				AdminController.getRootEntry().accept(new ShowMessageTotalVisitor());
 				//Value is in AdminController.visitorOutput
-				int amtMessageTotal = AdminController.getVisitorOutput();
+				int amtMessageTotal = (int)AdminController.getVisitorOutput();
 				//Format string to contain amount of users.
 				String messageAmt = String.format("There are %d total messages.", amtMessageTotal);
 				InfoDialog infoDialog = new InfoDialog(messageAmt);
@@ -290,7 +291,7 @@ public class AdminControlPanel {
 			}
 		});
 		btnShowTotalMessages.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnShowTotalMessages.setBounds(175, 195, 248, 29);
+		btnShowTotalMessages.setBounds(175, 181, 248, 23);
 		mainAppWindow.getContentPane().add(btnShowTotalMessages);
 		
 		JButton btnShowPositive = new JButton("Show Positive %");
@@ -299,11 +300,11 @@ public class AdminControlPanel {
 				//Have the root entry visit accept the show user total visitor method
 				AdminController.getRootEntry().accept(new ShowMessageTotalVisitor());
 				//Value is in AdminController.visitorOutput
-				int amtMessageTotal = AdminController.getVisitorOutput();
+				int amtMessageTotal = (int)AdminController.getVisitorOutput();
 				//Have the root entry visitor accept the show user pos message total visitor method
 				AdminController.getRootEntry().accept(new ShowPosMessageTotalVisitor());
 				//Value is in AdminController.visitorOutput
-				int amtPosMessages = AdminController.getVisitorOutput();
+				int amtPosMessages = (int)AdminController.getVisitorOutput();
 				//Calculate percentage of positive messages
 				double posMessagePercent = 0.0;
 				//If there are messages...
@@ -324,7 +325,7 @@ public class AdminControlPanel {
 		});
 		btnShowPositive.setToolTipText("Shows the percentage of total messages that are considered \"positive.\"");
 		btnShowPositive.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnShowPositive.setBounds(175, 224, 248, 29);
+		btnShowPositive.setBounds(175, 204, 248, 23);
 		mainAppWindow.getContentPane().add(btnShowPositive);
 		
 		JButton btnShowUserTotal = new JButton("Show User Total");
@@ -333,7 +334,7 @@ public class AdminControlPanel {
 				//Have the root entry visit accept the show user total visitor method
 				AdminController.getRootEntry().accept(new ShowUserTotalVisitor());
 				//Value is in AdminController.visitorOutput
-				int amtUserTotal = AdminController.getVisitorOutput();
+				int amtUserTotal = (int)AdminController.getVisitorOutput();
 				//Format string to contain amount of users.
 				String userAmt = String.format("There are %d total users.", amtUserTotal);
 				//New InfoDialog
@@ -343,7 +344,7 @@ public class AdminControlPanel {
 			}
 		});
 		btnShowUserTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnShowUserTotal.setBounds(175, 137, 248, 29);
+		btnShowUserTotal.setBounds(175, 137, 248, 23);
 		mainAppWindow.getContentPane().add(btnShowUserTotal);
 		
 		JButton btnShowGroupTotal = new JButton("Show Group Total");
@@ -352,7 +353,7 @@ public class AdminControlPanel {
 				//Have the root entry visitor accept the show group total visitor method
 				AdminController.getRootEntry().accept(new ShowGroupTotalVisitor());
 				//Value in AdminController.visitorOutput
-				int amtGroupTotal = AdminController.getVisitorOutput();
+				int amtGroupTotal = (int)AdminController.getVisitorOutput();
 				//Format string to contain amount of groups
 				String groupAmt = String.format("There are %d total groups", amtGroupTotal);
 				InfoDialog infoDialog = new InfoDialog(groupAmt);
@@ -361,7 +362,7 @@ public class AdminControlPanel {
 			}
 		});
 		btnShowGroupTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnShowGroupTotal.setBounds(175, 166, 248, 29);
+		btnShowGroupTotal.setBounds(175, 159, 248, 23);
 		mainAppWindow.getContentPane().add(btnShowGroupTotal);
 		
 		JSeparator separator = new JSeparator();
@@ -377,5 +378,53 @@ public class AdminControlPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_1.setBounds(168, 51, 47, 27);
 		mainAppWindow.getContentPane().add(lblNewLabel_1);	
+		
+		JButton btnCheckValidID = new JButton("Check if IDs Are Valid");
+		btnCheckValidID.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnCheckValidID.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Have the root entry visitor accept the check valid id visitor method
+				AdminController.getRootEntry().accept(new CheckValidIDVisitor());
+				//Value in AdminController.visitorOutput
+				int visitorOutput = (int)AdminController.getVisitorOutput();
+				//Format string for dialog text
+				String formattedString = visitorOutput == 1 ? "User ID Check: VALID" : "User ID Check: INVALID";
+				//Create a new dialog with the string
+				InfoDialog infoDialog = new InfoDialog(formattedString);
+				//Set dialog title
+				infoDialog.setTitle("Checking ID Validity");
+				//Set dialog visibility
+				infoDialog.setVisible(true);
+			}
+		});
+		btnCheckValidID.setBounds(10, 227, 156, 23);
+		mainAppWindow.getContentPane().add(btnCheckValidID);
+		
+		JButton btnShowLastUpdatedUser = new JButton("Show Last Updated User");
+		btnShowLastUpdatedUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Have the root entry visitor entry visitor accept the show last updated user visitor method
+				AdminController.getRootEntry().accept(new ShowLastUpdatedUserVisitor());
+				//Value in AdminController.visitorOutput
+				String userOutputID = "";
+				if(AdminController.getVisitorOutput() != null) {
+					userOutputID = ((User)AdminController.getVisitorOutput()).getID();
+				}else {
+					userOutputID = "NULL";
+				}
+				//Format string for dialog text
+				String formattedString = String.format("The most recently updated user is %s", userOutputID);
+				//Create a new dialog with the string
+				InfoDialog infoDialog = new InfoDialog(formattedString);
+				//Set dialog title
+				infoDialog.setTitle("Showing Last Updated User");
+				//Set dialog visibility
+				infoDialog.setVisible(true);
+			}
+		});
+		btnShowLastUpdatedUser.setToolTipText("Shows the last updated user in the system.");
+		btnShowLastUpdatedUser.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnShowLastUpdatedUser.setBounds(175, 227, 248, 23);
+		mainAppWindow.getContentPane().add(btnShowLastUpdatedUser);
 	}
 }//end AdminControlPanel class

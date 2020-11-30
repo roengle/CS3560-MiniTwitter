@@ -150,7 +150,7 @@ public class UserGroup extends TreeEntry {
 				System.out.print("\t");
 			}
 			//Print the ID and the type 
-			System.out.println(element.getID() + " - " + element.getClass().getName());
+			System.out.println(element.getID() + " - " + element.getClass().getName() + " - " + element.getCreationTime());
 			//If there is a group, recursively print the entries in that group
 			if(element instanceof UserGroup) {
 				((UserGroup) element).printAllEntries(tabCount + 1);

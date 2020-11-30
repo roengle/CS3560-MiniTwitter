@@ -42,11 +42,16 @@ public class UserView extends JFrame {
 	private JButton btnFollowUser;
 	private JButton btnTweetMessage;
 	
-	//Text box showing our user id
+	//Text boxes showing our user info
 	private JTextField txtIDInput;
+	private JTextField txtCreationTime;
+	private JLabel lblLastUpdate;
 	
 	//Our associated user object
 	private User user;
+	private long creationTime;
+	private long lastUpdateTime;
+	
 
 	/**
 	 * Launch the application.
@@ -81,11 +86,11 @@ public class UserView extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane listFeedScrollPane = new JScrollPane();
-		listFeedScrollPane.setBounds(29, 314, 382, 180);
+		listFeedScrollPane.setBounds(29, 333, 382, 161);
 		contentPane.add(listFeedScrollPane);
 		
 		JScrollPane listFollowingScrollPane = new JScrollPane();
-		listFollowingScrollPane.setBounds(29, 81, 382, 134);
+		listFollowingScrollPane.setBounds(29, 120, 382, 134);
 		contentPane.add(listFollowingScrollPane);
 		
 		//Make our two lists
@@ -133,31 +138,31 @@ public class UserView extends JFrame {
 			}
 		});
 		btnFollowUser.setEnabled(false);
-		btnFollowUser.setBounds(259, 11, 152, 34);
+		btnFollowUser.setBounds(259, 44, 152, 34);
 		contentPane.add(btnFollowUser);
 		
 		txtIDInput = new JTextField();
 		txtIDInput.setEditable(false);
-		txtIDInput.setBounds(97, 11, 152, 34);
+		txtIDInput.setBounds(97, 44, 152, 34);
 		contentPane.add(txtIDInput);
 		txtIDInput.setColumns(10);
 		
 		JLabel lblYourID = new JLabel("Your ID:");
 		lblYourID.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblYourID.setBounds(29, 14, 64, 24);
+		lblYourID.setBounds(29, 47, 64, 24);
 		contentPane.add(lblYourID);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(29, 56, 382, 2);
+		separator.setBounds(29, 88, 382, 2);
 		contentPane.add(separator);
 		
-		JLabel lblView = new JLabel("View (Currently Following)");
+		JLabel lblView = new JLabel("Currently Following");
 		lblView.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblView.setBounds(29, 56, 170, 24);
+		lblView.setBounds(29, 95, 126, 24);
 		contentPane.add(lblView);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(29, 231, 382, 2);
+		separator_1.setBounds(29, 264, 382, 2);
 		contentPane.add(separator_1);
 		
 		btnTweetMessage = new JButton("Tweet Message");
@@ -181,13 +186,34 @@ public class UserView extends JFrame {
 		btnTweetMessage.setEnabled(false);
 		btnTweetMessage.setToolTipText("Click to open a dialog that allows for messages to be tweeted from your account.");
 		btnTweetMessage.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnTweetMessage.setBounds(29, 244, 382, 34);
+		btnTweetMessage.setBounds(29, 272, 382, 34);
 		contentPane.add(btnTweetMessage);
 		
 		JLabel lblFeed = new JLabel("Tweet Feed");
 		lblFeed.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblFeed.setBounds(29, 289, 170, 24);
+		lblFeed.setBounds(29, 308, 170, 24);
 		contentPane.add(lblFeed);
+		
+		txtCreationTime = new JTextField();
+		txtCreationTime.setEditable(false);
+		txtCreationTime.setBounds(141, 7, 268, 33);
+		contentPane.add(txtCreationTime);
+		txtCreationTime.setColumns(10);
+		
+		JLabel lblCreationTime = new JLabel("Creation Time:");
+		lblCreationTime.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblCreationTime.setBounds(29, 11, 112, 23);
+		contentPane.add(lblCreationTime);
+		
+		JLabel lblNewLabel = new JLabel("Last Update:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel.setBounds(202, 95, 84, 24);
+		contentPane.add(lblNewLabel);
+		
+		lblLastUpdate = new JLabel("");
+		lblLastUpdate.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		lblLastUpdate.setBounds(284, 95, 126, 24);
+		contentPane.add(lblLastUpdate);
 	}
 	
 	/**
@@ -198,7 +224,28 @@ public class UserView extends JFrame {
 	 */
 	public UserView(User user) {
 		this();
-		setUser(user);	
+		setUser(user);
+	}
+	
+	/**
+	 * Set's the creation time for the user. Called after the associated user object is set.
+	 * Retrieves creation time from associated user, and sets the text box.
+	 */
+	private void setCreationTime() {
+		this.creationTime = user.getCreationTime();
+		txtCreationTime.setText(Long.toString(this.creationTime));
+	}
+	
+	/**
+	 * Set's the view's last update time. Is updated when the associated User object tweets or 
+	 * has it's tweet feed updated. Also initially shows the User creation time in the instance 
+	 * of the User being initialized with no tweets or tweet feed updates yet.
+	 * 
+	 * @param updateTime the update time 
+	 */
+	public void setLastUpdateTime(long updateTime) {
+		this.lastUpdateTime = updateTime;
+		lblLastUpdate.setText(Long.toString(this.lastUpdateTime));
 	}
 	
 	/**
@@ -207,7 +254,7 @@ public class UserView extends JFrame {
 	 * 
 	 * @param user the User object to set the user field to
 	 */
-	public void setUser(User user) {
+	private void setUser(User user) {
 		this.user = user;
 		setTitle("User View - " + user.getID());
 		//Unlock buttons
@@ -220,6 +267,10 @@ public class UserView extends JFrame {
 		listFeed = new JList(user.getFeed().toArray());
 		//Set the User obbject's user view to us
 		user.setUserView(this);
+		//Set the creation time for the text box
+		setCreationTime();
+		//Set the last update time for the user
+		setLastUpdateTime(user.getLastUpdateTime());
 	}
 	
 	/**

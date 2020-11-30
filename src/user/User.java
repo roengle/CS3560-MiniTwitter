@@ -13,10 +13,11 @@ public class User extends UserSubject implements Observer {
 	private List<String> followers;
 	private List<String> followings;
 	private List<String> feed;
+	private List<String> ourTweets;
 	private String mostRecentMessage;
 	private int tweetCount;
-	private List<String> ourTweets;
-	
+	private long lastUpdateTime;
+	//Our associated view
 	private UserView userView;
 	
 	/* List<Observer> inherited from UserSubject! */
@@ -72,6 +73,8 @@ public class User extends UserSubject implements Observer {
 		feed = new ArrayList<>();
 		ourTweets = new ArrayList<>();
 		tweetCount = 0;
+		//Set our last update time to when the user is initialized
+		lastUpdateTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -121,21 +124,19 @@ public class User extends UserSubject implements Observer {
 		tweetCount++;
 		//Set our most recent message
 		this.mostRecentMessage = formattedString;
+		//Update our last updated time
+		setLastUpdateTime(System.currentTimeMillis());
 		//Notify our observers that we posted a message
 		notifyObservers();
 		
 	}
 
 	/**
-	 * Acts as an observer being called by another user.
+	 * Acts as an observer being called by another user. In essence, when this method is called,
+	 * something the we are observing has notified us of an update. The only information we care about
+	 * is the last updated message and the ID (in the scenario a user just started following us).
 	 */
 	public void update(UserSubject userSubject) {
-		/*
-		 * One of our observers has called us...
-		 * Remember we only care about our followings messages
-		 * and ID. Once ID is added to our followers list, it won't be used
-		 * for anything else.
-		 */
 		//Get ID of our subject
 		String id = userSubject.getID();
 		//If their ID isn't in our follower list...
@@ -149,6 +150,8 @@ public class User extends UserSubject implements Observer {
 			feed.add(msg);
 			//Update feed GUI
 			userView.updateFeed(msg);
+			//Update last updated time
+			setLastUpdateTime(System.currentTimeMillis());
 		}
 	}
 	
@@ -159,6 +162,15 @@ public class User extends UserSubject implements Observer {
 	 * @return true if following, false if not
 	 */
 	public boolean isFollowing(String ID) { return followings.contains(ID); }
+	
+	/**
+	 * Set's the User object's last update time field
+	 * @param updateTime the last update time for the user
+	 */
+	private void setLastUpdateTime(long updateTime) {
+		this.lastUpdateTime = updateTime;
+		userView.setLastUpdateTime(this.lastUpdateTime);
+	}
 	
 	/**
 	 * Sets this User's parent UserGroup
@@ -188,6 +200,12 @@ public class User extends UserSubject implements Observer {
 	 * @return the followings list
 	 */
 	public List<String> getFollowings(){ return this.followings; }
+	
+	/**
+	 * Retrieves the last update time for the User object
+	 * @return the last update time
+	 */
+	public long getLastUpdateTime() { return this.lastUpdateTime; }
 	
 	/**
 	 * Returns *this* User's most recent message, which is in the mostRecentMessage field
