@@ -57,11 +57,11 @@ instance of AdminController to be made, which in turn allows AdminControlPanel t
 
 ### Visitor
 
-The visitor pattern is used to add functionality to the UserGroup. There are four elements:
+The visitor pattern is used to add functionality to the UserGroup. There are six elements:
 
 	* Check if All IDs are Valid (A3)
 	* Show Group Total
-	* Show Last Updated User
+	* Show Last Updated User (A3)
 	* Show Message Total
 	* Show Positive Message Percentage
 	* Show User Total
