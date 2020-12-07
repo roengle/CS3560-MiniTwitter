@@ -18,7 +18,7 @@ The following are the features added for the A3 assignment:
 	
 ## Video
 
-Watch the video describing the program [here](https://www.youtube.com/watch?v=G8Gog94gs2A&feature=youtu.be)!
+Watch the video describing the program [here](https://www.youtube.com/watch?v=G8Gog94gs2A&feature=youtu.be)! Please note the video only covers the program for the A2 assignment, so it won't show any of the features listed above.
 
 ## Description
 
